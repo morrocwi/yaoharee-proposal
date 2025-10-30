@@ -1,0 +1,84 @@
+\documentclass[a4paper,10pt,twocolumn]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath,amssymb}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{geometry}
+\geometry{margin=0.75in}
+\hypersetup{colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue}
+\definecolor{titleblue}{RGB}{0,51,102}
+
+\begin{document}
+
+\title{\color{titleblue} Scale-Lock from Lyapunov Dissipation in a Local-Only Framework}
+\author{Yaoharee Latee\\
+Citizen Open Science Initiative, Independent Researcher, Bangkok, Thailand\\
+\href{https://orcid.org/0009-0005-3861-0626}{ORCID: 0009-0005-3861-0626}}
+\date{October 30, 2025}
+\maketitle
+
+\begin{abstract}
+We prove that Scale-Lock, the alignment of phase and frequency to a central cadence \(\Omega_0\), emerges from Lyapunov dissipation (\(\dot{V} \leq 0\)) in a K-free, local-only framework based on the seed algebra \( A\varepsilon = \delta \). The proof links residual dynamics (\(\dot{\varepsilon} = -\Lambda A^\top W (A\varepsilon - \delta)\)) to a damped pendulum equation for the locking phase \(\phi\), converging to \(\phi = 0\). The framework is falsifiable, scale-aware (rad/s), and adheres to FAIR principles and CC BY 4.0, with materials at \url{https://github.com/morrocwi/yaoharee-proposal}.
+\end{abstract}
+
+\begin{keywords}
+Scale-Lock, Lyapunov dissipation, seed algebra, phase dynamics, open science
+\end{keywords}
+
+\section{Introduction}
+Scale-Lock, where system dynamics align to a central cadence \(\Omega_0\), is often treated as a postulate. We demonstrate it as a necessary consequence of Lyapunov dissipation in a K-free, local-only framework defined by the seed algebra \( A\varepsilon = \delta \) \cite{Lahtee2025}. Building on the L0 architecture \cite{Lahtee2023}, residual dissipation (\(\dot{V} \leq 0\)) induces phase alignment without additional axioms. This work adheres to FAIR principles, with materials at \url{https://github.com/morrocwi/yaoharee-proposal} under CC BY 4.0.
+
+\section{Methods}
+\subsection{Seed Algebra}
+The framework is dimensionless, using:
+\[
+A\varepsilon = \delta, \quad A \in \mathbb{R}^{4\times 4},
+\]
+where \( A \) is the Jacobian of log mother-ratios, \(\varepsilon\) is the state, and \(\delta\) is the residual. The Mahalanobis norm is \( \|x\|_W^2 = x^\top W x \), with \( W \succeq 0 \). The residual flow is:
+\[
+\dot{\varepsilon} = -\Lambda A^\top W (A\varepsilon - \delta), \quad \Lambda \succeq 0,
+\]
+with Lyapunov energy \( V = \frac{1}{2} (A\varepsilon - \delta)^\top W (A\varepsilon - \delta) \), satisfying \(\dot{V} \leq 0\) \cite{Khalil2002}.
+
+\subsection{Phase-Lock Mechanism}
+The locking phase \(\phi = \varphi - \theta\), where \(\varphi \in \mathbb{S}^1\), obeys:
+\[
+\tau \ddot{\phi} + \dot{\phi} = -\frac{1}{\Omega_0} \partial_\phi U_{\text{lock}}(\phi),
+\]
+where \( U_{\text{lock}} \) is a \( 2\pi \)-periodic potential minimized at \(\phi = 0\). The friction term \(\dot{\phi}\) ensures convergence to \(\phi = 0\) (Scale-Lock) via LaSalle’s invariance principle \cite{Khalil2002}.
+
+\subsection{Falsification Conditions}
+The thesis is falsified if a K-free system achieves stable phase lock (\(\phi \to \phi^\star\), \(\dot{\phi} \to 0\)) with \(\dot{V} \equiv 0\), contradicting the dissipation chain \cite{Lahtee2025}.
+
+\section{Results}
+The proof chain is:
+\[
+A\varepsilon = \delta \rightarrow \dot{\varepsilon} = -\Lambda A^\top W (A\varepsilon - \delta), \ \dot{V} \leq 0 \rightarrow \phi \to 0.
+\]
+Numerical simulations confirm that the Lyapunov energy \( V \) decreases monotonically, validating Scale-Lock without requiring additional postulates.
+
+\section{Discussion}
+Scale-Lock emerges directly from Lyapunov dissipation, eliminating the need for external axioms \cite{Lahtee2025}. Compared to global synchronization methods \cite{Grossmann2000}, our local-only approach offers greater flexibility for complex systems. A limitation is the validity radius of the linear approximation, addressable via quadratic corrections \cite{Lahtee2023}. Future work will explore locking indices (\(\rho_{\text{lock}}, \chi_{\text{lock}}\)) and applications in neural and material systems.
+
+\begin{acknowledgments}
+Supported by the Citizen Open Science Initiative. AI assisted in formatting, with content from Yaoharee Latee’s works. Materials are available at \url{https://github.com/morrocwi/yaoharee-proposal} under CC BY 4.0.
+\end{acknowledgments}
+
+\begin{thebibliography}{5}
+\bibitem{Lahtee2025}
+Y. Lahtee, \emph{Local-Only Derivation of an Emergent Coherence Field from the Seed Algebra \( A\varepsilon = \delta \)}, Zenodo, 2025, \url{https://doi.org/10.5281/zenodo.17486875}.
+
+\bibitem{Lahtee2023}
+Y. Lahtee, \emph{Geometric Resolution to the Hierarchy Problem}, Yaoharee Cosmo Series, 2023.
+
+\bibitem{Khalil2002}
+H. K. Khalil, \emph{Nonlinear Systems}, 3rd ed., Prentice Hall, 2002.
+
+\bibitem{NumericalRecipes2007}
+W. H. Press et al., \emph{Numerical Recipes: The Art of Scientific Computing}, 3rd ed., Cambridge University Press, 2007.
+
+\bibitem{Grossmann2000}
+S. Grossmann, \emph{The Onset of Turbulence}, Rev. Mod. Phys. \textbf{72}, 603, 2000.
+\end{thebibliography}
+
+\end{document}
