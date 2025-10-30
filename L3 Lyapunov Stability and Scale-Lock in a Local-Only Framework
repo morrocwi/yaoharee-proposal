@@ -1,0 +1,103 @@
+\documentclass[a4paper,10pt,twocolumn]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath,amssymb}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{geometry}
+\geometry{margin=0.75in}
+\hypersetup{colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue}
+\definecolor{titleblue}{RGB}{0,51,102}
+
+\begin{document}
+
+\title{\color{titleblue} Lyapunov Stability and Scale-Lock in a Local-Only Framework}
+\author{Yaoharee Latee \\
+Citizen Open Science Initiative, Independent Researcher, Bangkok, Thailand \\
+\href{https://orcid.org/0009-0005-3861-0626}{ORCID: 0009-0005-3861-0626}}
+\date{October 31, 2025, 01:57 AM +07}
+\maketitle
+
+\begin{abstract}
+We establish the global Lyapunov stability of the residual dynamics \(\dot{\varepsilon} = -\Lambda A^\top W (A\varepsilon - \delta)\) in a K-free, local-only framework based on the seed algebra \( A\varepsilon = \delta \), proving \(\dot{V} \leq 0\) under \( W \succ 0 \) and \(\Lambda \succeq 0\). This stability underpins Scale-Lock and mass emergence, validated numerically via a Minimal Viable Simulation (MVS) with TP1 (homogeneous decay) and TP2 (ping-excited lock), confirming \(\dot{E}_{\text{coh}} \leq 0\) and discrete quark-like modes. The effective mass is \( m_{\text{eff}} = \hbar \Omega_0^2 \tau / c^2 \). Results align with theory, with no falsification. This work adheres to FAIR principles and CC BY 4.0, with materials at \url{https://github.com/morrocwi/yaoharee-proposal}.
+\end{abstract}
+
+\begin{keywords}
+Lyapunov stability, Scale-Lock, seed algebra, mass emergence, quark modes
+\end{keywords}
+
+\section{Introduction}
+Scale-Lock and mass generation are emergent phenomena driven by Lyapunov dissipation (\(\dot{V} \leq 0\)) in a K-free, local-only framework defined by the seed algebra \( A\varepsilon = \delta \) \cite{Lahtee2025}. This work proves the global Lyapunov stability of the residual dynamics, providing a theoretical foundation, and validates it numerically via a Minimal Viable Simulation (MVS) \cite{Lahtee2023}. The stability ensures phase alignment and mass emergence, linking informational inertia (\(\tau\)) to quark-like modes. Materials are at \url{https://github.com/morrocwi/yaoharee-proposal} under CC BY 4.0.
+
+\section{Methods}
+\subsection{Theoretical Framework: Lyapunov Stability}
+The residual dynamics are:
+\[
+\dot{\varepsilon} = -\Lambda A^\top W (A\varepsilon - \delta),
+\]
+where \( A \in \mathbb{R}^{n \times n} \) is a linear scale operator, \( W \succ 0 \) is a positive-definite weighting matrix, and \(\Lambda = \text{diag}(\lambda_1, \ldots, \lambda_n)\) with \(\lambda_i \geq 0\). The Lyapunov candidate is:
+\[
+V = \frac{1}{2} (A\varepsilon - \delta)^\top W (A\varepsilon - \delta).
+\]
+Differentiating yields:
+\[
+\dot{V} = (A\varepsilon - \delta)^\top W A \dot{\varepsilon} = -(A\varepsilon - \delta)^\top W A \Lambda A^\top W (A\varepsilon - \delta) \leq 0,
+\]
+since \( W A \Lambda A^\top W \) is positive semidefinite. Equality holds only at \( A\varepsilon = \delta \), ensuring global stability \cite{Khalil2002}.
+
+\subsection{Phase-Lock and Mass Emergence}
+The locking phase \(\phi = \varphi - \theta(\Psi)\) satisfies:
+\[
+\tau \ddot{\phi} + \dot{\phi} = -\frac{1}{\Omega_0} \partial_\phi U_{\text{lock}}(\phi),
+\]
+with \( U_{\text{lock}}(\phi) = U_0 (1 - \cos \phi) \), minimized at \(\phi = 0\). The effective mass is:
+\[
+m_{\text{eff}} = \frac{\hbar \Omega_0^2 \tau}{c^2}.
+\]
+
+\subsection{Minimal Viable Simulation (MVS)}
+\subsubsection{TP1: Homogeneous Decay}
+Verifies \(\dot{E}_{\text{coh}} \leq 0\) with:
+\[
+\tau \partial_t^2 \Psi + \partial_t \Psi - c^2 \nabla^2 \Psi = 0, \quad \Psi(\mathbf{x}, 0) = \Psi_0(\mathbf{x}).
+\]
+Pass if \( E_{\text{coh}} \) decreases. Script: \texttt{L2\_MVS\_TP1\_HomogeneousDecay.py}.
+
+\subsubsection{TP2: Lock with Ping}
+Tests discrete modes with:
+\[
+\tau \ddot{\phi} + \dot{\phi} + \frac{U_0}{\Omega_0} \sin \phi = \text{Ping}(t),
+\]
+using \(\Omega_0 = 1.5 \, \text{rad/s}\), \(\tau = 0.1\), \(U_0 = \Omega_0^2\). A ping at \( t = 10 \, \text{s} \) excites modes. Pass if FFT shows discrete peaks. Script: \texttt{L2\_MVS\_TP2_LockPingFFT.py}.
+
+\section{Results}
+\subsection{TP1: Homogeneous Decay}
+Simulations confirm \(\dot{E}_{\text{coh}} \leq 0\), consistent with Lyapunov stability.
+
+\subsection{TP2: Lock-in and Quark Modes}
+With damping, \(\phi \to 0\) before \( t = 10 \, \text{s} \). A ping excites discrete peaks at \(\Omega_0 = 1.5 \, \text{rad/s}\) and \(\Omega_n > \Omega_0\), indicating quark-like modes. No-damping shows persistent oscillations.
+
+\section{Discussion}
+The Lyapunov proof establishes \(\dot{V} \leq 0\) as intrinsic to \( A\varepsilon = \delta \) \cite{Lahtee2025}, supporting Scale-Lock and mass emergence. TP1 and TP2 validate this numerically, with \( m_{\text{eff}} \) linking coherence to inertia. Compared to \cite{Grossmann2000}, our local approach is falsifiable. Limitations include linear approximation validity, addressable via \cite{Lahtee2023}. Future work will quantify \(\Omega_n\).
+
+\begin{acknowledgments}
+Supported by the Citizen Open Science Initiative. AI assisted in formatting, with content from Yaoharee Latee’s works. Materials are at \url{https://github.com/morrocwi/yaoharee-proposal} under CC BY 4.0.
+\end{acknowledgments}
+
+\begin{thebibliography}{5}
+\bibitem{Lahtee2025}
+Y. Lahtee, \emph{Local-Only Derivation of an Emergent Coherence Field from the Seed Algebra \( A\varepsilon = \delta \)}, Zenodo, 2025, \url{https://doi.org/10.5281/zenodo.17486875}.
+
+\bibitem{Lahtee2023}
+Y. Lahtee, \emph{Geometric Resolution to the Hierarchy Problem}, Yaoharee Cosmo Series, 2023.
+
+\bibitem{Khalil2002}
+H. K. Khalil, \emph{Nonlinear Systems}, 3rd ed., Prentice Hall, 2002.
+
+\bibitem{NumericalRecipes2007}
+W. H. Press et al., \emph{Numerical Recipes: The Art of Scientific Computing}, 3rd ed., Cambridge University Press, 2007.
+
+\bibitem{Grossmann2000}
+S. Grossmann, \emph{The Onset of Turbulence}, Rev. Mod. Phys. \textbf{72}, 603, 2000.
+\end{thebibliography}
+
+\end{document}
