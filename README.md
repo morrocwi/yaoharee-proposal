@@ -10,6 +10,17 @@ This repository contains the official manuscripts, artifacts, and simulation scr
 
 [cite_start]*AI Disclosure: AI was used to assist in structuring, formatting, and refining phrasing[cite: 3, 5]. [cite_start]All scientific content, equations, and principles originate from Yaoharee Latee’s work[cite: 4].*
 
+
+### 🧠 Positioning with Respect to Related Work
+
+This monograph (L0–L4), rooted in the algebraic seed equation \( A\varepsilon = \delta \), advances beyond current approaches to emergent mass, quantum coherence, and informational gravity by offering a **strictly local, axiom-free derivation** of core physical phenomena. Unlike contemporary models—such as the *Tanfarid Quantum Thermodynamic Universe (TQTU)* [Chowdhury, 2025], *Quantum Information Spacetime Theory (QIST)* [Lin, 2025], and the *Causality Lock framework* [Sinclair, 2025]—which rely on assumed topologies, field constructions, or phenomenological heuristics, the UoI framework builds **all physical emergence from symbolic algebra alone**, with no imposed metric or external coherence field.
+
+This work introduces a *post-field theoretical paradigm* that unifies unit-invariance, emergent causality, and mass-generation within a single logical structure, eliminating the need for multi-model architectures. It establishes coherence not as a field effect but as an algebraic necessity, encoded through symbolic consistency across reference chains. In this sense, it **supersedes prior models by reducing the ontology of physics to its irreducible computational and information-theoretic substrate**.
+
+This document is best viewed as both a mathematical monograph and a systems-level epistemic compression of modern theoretical physics, enabling fully traceable derivations without dependence on empirical assumptions.
+
+
+
 ## Framework Overview
 
 [cite_start]The core of this framework is a local-only, K-free (unit-invariant) model based on a single anchor frequency $\Omega_0$[cite: 7].
