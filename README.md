@@ -1,4 +1,31 @@
+# Yaoharee Cosmo v3.1∞ — Open-TOE Framework
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17501303.svg)](https://doi.org/10.5281/zenodo.17501303)
+[![License: CC BY 4.0](https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)
+[![Open Science](https://img.shields.io/badge/Open%20Science-UNESCO%202021-blue)](https://unesdoc.unesco.org/ark:/48223/pf0000379949)
+![arXiv Planned](https://img.shields.io/badge/arXiv-Preprint%20(planned)-lightgrey)
+
+
+---
+
+## 🌍 Overview
+**Yaoharee Cosmo v3.1∞** is an open, citizen-science theoretical physics framework that unifies information, coherence, and physical laws under the *Unified α-Coupled Master Equation*.  
+This repository contains LaTeX manuscripts, Python validation scripts, and open data consistent with UNESCO 2021 Open Science principles.
+
+---
+
+## 🧠 Key Papers
+| Layer | Title | File |
+|:------|:------|:------|
+| L0 | *A Local-Only Derivation of the Emergent Coherence Field* | `L0_YaohareeCosmo_v3.1_Monograph.latex` |
+| L1 | *The Scale-Lock Mechanism: A Necessary Consequence of K-free Lyapunov Dissipation* | `L1_ScaleLock_Lyapunov.latex` |
+| L2 | *Mass Emergence and Scale Lock Across Domains* | `L2 Scale-Lock and Mass Emergence.latex` |
+| L3 | *Lyapunov Stability and Scale-Lock Consistency* | `L3 Lyapunov Stability and Scale-Lock.latex` |
+
+---
+
+## ⚙️ Code and Validation
+Python scripts for field simulations, FFT-based phase lock tests, and stability checks:
+
 
 # Universe of Information Framework (K-free, Yaoharee Proposal)
 
@@ -78,8 +105,28 @@ The theory is designed to be testable via these key failure points:
 * [cite_start]**L5:** Systematic failure of the $g\propto f^\beta$ cross-domain scaling[cite: 38].
 * [cite_start]**L7:** Measurements passing the Xlock gate but violating residual consistency[cite: 39].
 
-## Citation & Licensing
-Please cite the Zenodo series hub for this work:
-* [cite_start]**Zenodo DOI:** [https://doi.org/10.5281/zenodo.17486875](https://doi.org/10.5281/zenodo.17486875) [cite: 6]
 
-[cite_start]All documents and code are released under **CC BY 4.0**[cite: 40].
+---
+
+## 📘 Citation
+> Lahtee, Yaoharee (2025). *Yaoharee Cosmo v3.1∞ — Open-TOE Framework.* Zenodo.  
+> [DOI: 10.5281/zenodo.17501303](https://doi.org/10.5281/zenodo.17501303)
+
+---
+
+## 📂 Data and Code Availability
+All data, figures, and LaTeX sources for this study are openly available at  
+[https://doi.org/10.5281/zenodo.17501303](https://doi.org/10.5281/zenodo.17501303).
+
+---
+
+## 🌐 License
+This project is released under the [Creative Commons Attribution 4.0 International (CC BY 4.0)](https://creativecommons.org/licenses/by/4.0/) license.
+
+---
+
+## 🤝 Open Science Policy
+This work complies with the [UNESCO 2021 Recommendation on Open Science](https://unesdoc.unesco.org/ark:/48223/pf0000379949)  
+and follows FAIR data principles (Findable, Accessible, Interoperable, Reusable).  
+Part of the **Citizen Open Science @ Home** initiative.
+
