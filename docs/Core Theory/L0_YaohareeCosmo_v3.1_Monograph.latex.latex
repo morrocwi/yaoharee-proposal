@@ -1,0 +1,3267 @@
+% ===================== Chapter 1 =====================
+
+\section{Notation \& Preliminaries}
+
+\subsection{Core Symbols}
+Vectors are column vectors. For a matrix $M$, $M^\top$ is transpose.
+All quantities in this monograph are made \emph{dimensionless} first.
+
+\begin{center}
+\begin{tabular}{ll}
+$\omega,\kappa,b,\rho$ & primitive variables (frequency-like, curvature/diffusion-like, coupling, density-like)\\
+$\Omega_0,B_0,C_0,\rho_0$ & reference anchors (units) for $(\omega,\kappa,b,\rho)$\\
+$\hat{\omega},\hat{\kappa},\hat b,\hat{\rho}$ & near-unity variables (dimensionless)\\
+$\Pi_i$ & mother ratios (Buckingham-$\Pi$ style)\\
+$\varepsilon$ & residual state (internal)\\
+$\delta$ & measured deviation (external)\\
+$A$ & Jacobian of $\log\Pi$ at the unity state (local linear map)\\
+$W\succeq0$ & data-weight (often inverse covariance) \\
+$\Lambda\succeq0$ & step/metric in residual space \\
+\end{tabular}
+\end{center}
+
+\subsection{Dimensionless Separation (All-Hat First)}
+Fix a single frequency anchor $\Omega_0>0$ and define
+\[
+B_0:=\Omega_0^2,\qquad C_0:=\Omega_0,\qquad \rho_0:=\Omega_0^{-1},\qquad 
+\tau_0:=\Omega_0^{-1}.
+\]
+Declare the dimensionless \emph{near-unity} variables
+\[
+\hat\omega=\frac{\omega}{\Omega_0}=1+\varepsilon_\omega,\quad
+\hat\kappa=\frac{\kappa}{B_0}=1+\varepsilon_\kappa,\quad
+\hat b=\frac{b}{C_0}=1+\varepsilon_b,\quad
+\hat\rho=\frac{\rho}{\rho_0}=1+\varepsilon_\rho,\quad \|\varepsilon\|\ll1.
+\]
+All subsequent algebra is performed in hats; results are unit/scale-invariant.
+
+\subsection{Mother Ratios and Log-Linearization}
+Define the mother ratios around unity,
+\[
+\Pi_1=\frac{\kappa}{\omega^2}=1+\delta_1,\quad
+\Pi_2=\frac{b}{\omega}=1+\delta_2,\quad
+\Pi_3=\omega\rho=1+\delta_3,\quad
+\Pi_4=\frac{\kappa b}{C\,\Omega_0}=1+\delta_4,
+\]
+and use $\log(1+x)=x+O(x^2)$ to obtain the local log-linear system
+\[
+A\varepsilon=\delta,\qquad
+A=
+\begin{pmatrix}
+-2&1&0&0\\
+-1&0&1&0\\
+1&0&0&1\\
+0&1&1&0
+\end{pmatrix}.
+\]
+This is the \textbf{Seed} relation of the entire framework.
+
+\subsection{Invertibility and Closed-Form Recovery}
+Since $\det A=-3\neq0$, the map is locally invertible and
+\[
+A^{-1}=\frac{1}{3}
+\begin{pmatrix}
+-1&-1&0&1\\
+1&-2&0&2\\
+-1&2&0&1\\
+1&1&3&-1
+\end{pmatrix},\qquad \varepsilon=A^{-1}\delta.
+\]
+Componentwise,
+\[
+\varepsilon_\omega=\tfrac{-\delta_1-\delta_2+\delta_4}{3},\quad
+\varepsilon_\kappa=\tfrac{\delta_1-2\delta_2+2\delta_4}{3},\quad
+\varepsilon_b=\tfrac{-\delta_1+2\delta_2+\delta_4}{3},\quad
+\varepsilon_\rho=\tfrac{\delta_1+\delta_2+3\delta_3-\delta_4}{3}.
+\]
+
+\subsection{Norms, Inner Products, and Weights}
+We use the standard Euclidean inner product on $\mathbb{R}^n$,
+$\langle x,y\rangle=x^\top y$, with weighted seminorm induced by $W\succeq0$,
+\[
+\|r\|_{W}^2 := r^\top W r.
+\]
+The residual-space Lyapunov candidate is
+\[
+V(\varepsilon;\delta):=\frac12\,(A\varepsilon-\delta)^\top W (A\varepsilon-\delta).
+\]
+
+\subsection{Residual Dynamics (Preview)}
+The canonical gradient flow on the residual manifold reads
+\[
+\dot\varepsilon=-\Lambda A^\top W\,(A\varepsilon-\delta),\qquad 
+\dot V=- (A\varepsilon-\delta)^\top W A \Lambda A^\top W (A\varepsilon-\delta)\le 0.
+\]
+All quantities are already dimensionless; one may rescale time by $\hat t=t/\tau_0$ and absorb $\tau_0$ into $\Lambda$ if desired.
+
+\subsection{Operator Substitution (Preview)}
+When embedding $\varepsilon(\mathbf x,t)$ into a field $\Psi$ and applying the symbolic map
+\[
+\omega\mapsto i\partial_t,\qquad \kappa\mapsto -\nabla^2,
+\]
+we will obtain a dissipative/telegraph-like core for $\Psi$ in later chapters.
+\qedhere
+% ===================== End Chapter 1 =====================
+
+\begin{tcolorbox}[title=Compatibility Note (Units and Symbols)]
+Throughout the monograph we adopt the rad/s convention:
+\[
+\Omega_0=\omega_0,\qquad
+B_0=\Omega_0^2,\quad C_0=\Omega_0,\quad \rho_0=\Omega_0^{-1},\quad \tau_0=\Omega_0^{-1}.
+\]
+When reporting frequencies in Hz for figures or tables, define
+\(f_0:=\Omega_0/(2\pi)\). To avoid symbol collision with Hz-based narratives,
+the anchor that appears in the auxiliary ratio is denoted \(\mathcal C\), so that
+\[
+\Pi_4=\frac{\kappa\, b}{\mathcal C\,\Omega_0}.
+\]
+This keeps all algebra unit-free and invariant while allowing practical
+Hz-based reporting without altering any core formulas.
+\end{tcolorbox}
+
+
+% ===================== Chapter 2 =====================
+
+\section{Dimensionless Separation (All-Hat First)}
+
+\subsection{H0 Anchors (Nondimensionalization)}
+Let $[\omega]=T^{-1}$, $[\kappa]=T^{-2}$, $[b]=T^{-1}$, $[\rho]=T^{+1}$. 
+Fix a characteristic frequency $\Omega_0>0$ and define
+\[
+B_0=\Omega_0^2,\quad C_0=\Omega_0,\quad \rho_0=\Omega_0^{-1},\quad C=\Omega_0^2,\quad \tau_0=\Omega_0^{-1}.
+\]
+All algebra henceforth uses these anchors. 
+\hfill{\small (cf. H0 anchor set)} 
+``{\footnotesize :contentReference[oaicite:0]{index=0}}''
+
+\subsection{H1 Near-One Dimensionless Variables}
+\[
+\hat\omega=\omega/\Omega_0=1+\varepsilon_\omega,\quad
+\hat\kappa=\kappa/B_0=1+\varepsilon_\kappa,\quad
+\hat b=b/C_0=1+\varepsilon_b,\quad
+\hat\rho=\rho/\rho_0=1+\varepsilon_\rho,\quad \|\varepsilon\|\ll1.
+\]
+\textbf{Unit-change invariance.} If $t\mapsto\tilde t= s t$ with $s>0$, then $\tilde\omega=\omega/s$, $\tilde\Omega_0=\Omega_0/s$, etc., hence all hats are invariant $\Rightarrow$ algebra in hats is scale/unit invariant.
+\hfill{\small (near-one hats \& invariance)} 
+``{\footnotesize :contentReference[oaicite:1]{index=1}}'' 
+``{\footnotesize :contentReference[oaicite:2]{index=2}}''
+
+\subsection{H2 Mother Ratios and the Scale Generator}
+Scale generator $S_\lambda:(\kappa,\omega,b,\rho)\mapsto(\lambda^2\kappa,\lambda\omega,\lambda b,\lambda^{-1}\rho)$ yields the invariant basis 
+\(
+\Pi_1=\kappa/\omega^2,\ \Pi_2=b/\omega,\ \Pi_3=\omega\rho
+\),
+and an anchor-assisted near-one ratio 
+\(
+\Pi_4=\kappa b/(C\Omega_0)
+\).
+We write the near-unity forms
+\[
+\Pi_1=1+\delta_1,\quad \Pi_2=1+\delta_2,\quad \Pi_3=1+\delta_3,\quad \Pi_4=1+\delta_4.
+\]
+\hfill{\small (scale group \& invariant basis)} 
+``{\footnotesize :contentReference[oaicite:3]{index=3}}'' 
+``{\footnotesize :contentReference[oaicite:4]{index=4}}''
+
+\subsection{H3 Log-Linearization to the Seed System}
+Using $\log(1+x)=x+O(x^2)$ componentwise around the unity state gives the local linear system
+\[
+A\varepsilon=\delta,\qquad
+A=
+\begin{pmatrix}
+-2&1&0&0\\
+-1&0&1&0\\
+1&0&0&1\\
+0&1&1&0
+\end{pmatrix},
+\qquad \det A=-3\neq 0.
+\]
+\hfill{\small (matrix form and $\det A$)} 
+``{\footnotesize :contentReference[oaicite:5]{index=5}}''
+
+\subsection{H4 Exact Inverse and Closed-Form Recovery}
+Since $\det A\neq0$, the inverse exists and
+\[
+A^{-1}=\tfrac{1}{3}
+\begin{pmatrix}
+-1&-1&0&1\\
+1&-2&0&2\\
+-1&2&0&1\\
+1&1&3&-1
+\end{pmatrix},\qquad \varepsilon=A^{-1}\delta,
+\]
+so that
+\[
+\varepsilon_\omega=\tfrac{-\delta_1-\delta_2+\delta_4}{3},\quad
+\varepsilon_\kappa=\tfrac{\delta_1-2\delta_2+2\delta_4}{3},\quad
+\varepsilon_b=\tfrac{-\delta_1+2\delta_2+\delta_4}{3},\quad
+\varepsilon_\rho=\tfrac{\delta_1+\delta_2+3\delta_3-\delta_4}{3}.
+\]
+\hfill{\small (closed forms)} 
+``{\footnotesize :contentReference[oaicite:6]{index=6}}''
+
+\subsection{H5 Recovery to Physical (for Examples)}
+\[
+\omega=\Omega_0(1+\varepsilon_\omega),\quad
+\kappa=B_0(1+\varepsilon_\kappa),\quad
+b=C_0(1+\varepsilon_b),\quad
+\rho=\rho_0(1+\varepsilon_\rho).
+\]
+Indicators (symmetry-preserving / weak symmetry-breaking) may be defined from these recoveries.
+\hfill{\small (recovery \& $\beta$-indicators)} 
+``{\footnotesize :contentReference[oaicite:7]{index=7}}'' 
+``{\footnotesize :contentReference[oaicite:8]{index=8}}''
+
+\subsection{Quadratic Remainder \& Validity Radius}
+Local log-linearization admits a quadratic remainder: 
+\(
+\log F(1+\varepsilon)=J\varepsilon+R(\varepsilon),\ \|R(\varepsilon)\|_2\le \tfrac{1}{2}M\|\varepsilon\|_2^2
+\).
+Hence the linear closure holds inside a radius governed by $M$; sensitivity obeys 
+\(
+\|\Delta\varepsilon\|\le\|A^{-1}\|\,\|\Delta\delta\|
+\).
+\hfill{\small (quadratic bound \& sensitivity)} 
+``{\footnotesize :contentReference[oaicite:9]{index=9}}'' 
+``{\footnotesize :contentReference[oaicite:10]{index=10}}''
+
+\subsection{Overdetermined Closures (Optional)}
+With $m\ge4$ near-one relations $G\varepsilon\simeq\delta$ and a weight $W\succeq0$,
+\[
+\hat\varepsilon=\arg\min_\varepsilon\|W^{1/2}(G\varepsilon-\delta)\|_2^2=(G^TWG)^{-1}G^TW\delta,\quad
+\hat\varepsilon_\lambda=(G^TWG+\lambda I)^{-1}G^TW\delta.
+\]
+\hfill{\small (WLS/Tikhonov in the hat-frame)} 
+``{\footnotesize :contentReference[oaicite:11]{index=11}}''
+
+\subsection{(Box) Domain-Agnostic Normalization}
+A global hat-frame may also be declared by spatial/temporal/field units $(\ell_0,t_0,\Psi_0)$ and then suppressing hats in the sequel; one may absorb a dimensionless Planck factor $\hat\hbar$ into prefactors as needed.
+\hfill{\small (global normalization)} 
+``{\footnotesize :contentReference[oaicite:12]{index=12}}''
+
+\subsection{Recipe (One-Pass)}
+(i) nondimensionalize (H0–H1); (ii) form ratios \& linearize (H2–H3);
+(iii) solve $\varepsilon=A^{-1}\delta$ (H4–H5); (iv) evaluate indicators; (v) bound errors/sensitivity; (vi) add WLS/Tikhonov gates if needed.
+\hfill{\small (H15 step recipe)} 
+``{\footnotesize :contentReference[oaicite:13]{index=13}}''
+
+\paragraph{Summary.} บทนี้สถาปนา “กรอบหมวก” ที่ไร้มิติและอินแวเรียนซ์อย่างเคร่งครัด—ตั้งแต่ anchor → hats → mother ratios → ลอค–ลิเนียร์ไรซ์ → คำตอบย้อนกลับ—พร้อมกรอบความถูกต้องอันดับสองและสถาปัตยกรรมปิดงาน (H15) ที่จะใช้ซ้ำทั้งเล่ม
+\qed
+% ===================== End Chapter 2 =====================
+
+% ===================== Chapter 3 =====================
+\section{Lie-Scale Group and Invariants}
+
+\subsection{The Lie Scale Action}
+Let the primitive variables be $(\kappa,\omega,b,\rho)$, already nondimensional
+(see Chapter~2). Consider the one-parameter scale action
+\begin{equation}
+S_\lambda:\ (\kappa,\omega,b,\rho)\ \mapsto\ (\lambda^{2}\kappa,\ \lambda\,\omega,\ \lambda\,b,\ \lambda^{-1}\rho),
+\qquad \lambda>0.
+\label{eq:S_lambda}
+\end{equation}
+This action is smooth, multiplicative in $\lambda$, and preserves the hat-frame
+constructed in Chapter~2.
+
+\paragraph{Infinitesimal generator.}
+Write $x=(\kappa,\omega,b,\rho)^\top$ and define the generator $L$ by
+\(
+\frac{d}{d(\log\lambda)}\,x(\lambda)\big|_{\lambda=1}=L\,x.
+\)
+From \eqref{eq:S_lambda},
+\begin{equation}
+L=\mathrm{diag}(2,\,1,\,1,\,-1).
+\label{eq:generator_L}
+\end{equation}
+
+\subsection{Scale Invariants and the Nullspace Principle}
+Define the mother ratios (scale invariants)
+\begin{equation}
+\Pi_1=\frac{\kappa}{\omega^2},\qquad
+\Pi_2=\frac{b}{\omega},\qquad
+\Pi_3=\omega\,\rho,
+\label{eq:Pi_basic}
+\end{equation}
+and, when an anchor $C\Omega_0$ is employed (cf. Chapter~2), an auxiliary
+near-one ratio
+\begin{equation}
+\Pi_4=\frac{\kappa\,b}{C\,\Omega_0}.
+\label{eq:Pi_aux}
+\end{equation}
+Each $\Pi_j$ is invariant under \eqref{eq:S_lambda}. In logarithmic coordinates
+$y=\log x=(\log\kappa,\log\omega,\log b,\log\rho)^\top$, the generator
+\eqref{eq:generator_L} induces the linear form
+\[
+\frac{d}{d(\log\lambda)}\,y(\lambda)\Big|_{\lambda=1}
+=\begin{pmatrix}2\\1\\1\\-1\end{pmatrix} =: \ell,
+\]
+and the invariance of $\Pi$ is equivalent to the orthogonality constraint
+\begin{equation}
+\nabla_y \big(\log \Pi_j\big)\cdot \ell=0\quad\text{for each }j.
+\label{eq:null_constraint}
+\end{equation}
+Hence, the gradients $\{\nabla_y\log\Pi_j\}$ lie in the nullspace of the
+rank-one operator $y\mapsto \ell^\top y$, and the space of independent invariants
+has dimension $4-1=3$.
+
+\subsection{Jacobian of \texorpdfstring{$\log\Pi$}{logPi} and the Local Linear Map}
+Let $\Pi=(\Pi_1,\Pi_2,\Pi_3,\Pi_4)^\top$ with the near-unity parameterization
+\[
+\Pi_i=1+\delta_i,\qquad \|\delta\|\ll 1,
+\]
+and let $\varepsilon=(\varepsilon_\omega,\varepsilon_\kappa,\varepsilon_b,\varepsilon_\rho)^\top$
+collect the near-one residuals of the hat-variables
+(Chapter~2). The Jacobian of $\log \Pi$ at the unity state (\emph{i.e.},
+$\varepsilon=0$) yields the local linear map
+\begin{equation}
+A\,\varepsilon=\delta,\qquad
+A=
+\begin{pmatrix}
+-2&1&0&0\\
+-1&0&1&0\\
+1&0&0&1\\
+0&1&1&0
+\end{pmatrix},\qquad \det A=-3\neq 0,
+\label{eq:seed_system}
+\end{equation}
+which is precisely the seed system used in Chapter~2.
+
+\subsection{Local Log-Linearization Theorem}
+\begin{theorem}[Local log-linearization with quadratic remainder]
+Let $\Pi(\varepsilon)$ be defined from the hat-variables as in Chapter~2 and
+\eqref{eq:Pi_basic}--\eqref{eq:Pi_aux}. Then, in a neighborhood of the unity
+state $\varepsilon=0$,
+\begin{equation}
+\log \Pi(1+\varepsilon)\ =\ A\,\varepsilon\ +\ R(\varepsilon),
+\qquad \|R(\varepsilon)\|_2\ \le\ \tfrac12\,M\,\|\varepsilon\|_2^{2},
+\label{eq:loglin_remainder}
+\end{equation}
+for some constant $M$ depending on second derivatives of $\log\Pi$ on the
+neighborhood. Consequently, the inverse map satisfies
+\(
+\|\Delta\varepsilon\|\le \|A^{-1}\|\,\|\Delta\delta\|
+\)
+whenever $\|\varepsilon\|$ is small enough for \eqref{eq:loglin_remainder}
+to hold.
+\end{theorem}
+\begin{proof}[Sketch]
+Taylor-expand $\log\Pi$ about $\varepsilon=0$; the first-order term is the Jacobian
+$A$ in \eqref{eq:seed_system}. The Lagrange form of the remainder yields the
+quadratic bound with $M$ controlled by the supremum of the operator norm of the
+Hessian of $\log\Pi$ on the neighborhood. The sensitivity estimate follows by
+applying $A^{-1}$ to the first-order relation and bounding the remainder.
+\end{proof}
+
+\subsection{Rank Considerations and Independence}
+Because \eqref{eq:S_lambda} is generated by a single parameter, the linear
+constraint \eqref{eq:null_constraint} removes exactly one dimension from the
+four logarithmic coordinates. Therefore, at most three independent scale
+invariants exist locally, aligning with the triple $(\Pi_1,\Pi_2,\Pi_3)$ in
+\eqref{eq:Pi_basic}. The auxiliary ratio $\Pi_4$ in \eqref{eq:Pi_aux} is near-one
+by construction (anchor-assisted) and is convenient for conditioning but not
+independent of the first three at the exact unity state.
+
+\subsection{Consequences for the Seed System}
+Equation \eqref{eq:seed_system} is canonical for three reasons:
+(i) it is derived from the Lie scale symmetry via $\log$ coordinates;
+(ii) it enjoys unit/scale invariance inherited from the hat-frame
+(Chapter~2); and (iii) its invertibility ($\det A\neq 0$) provides the closed-form
+recovery $\varepsilon=A^{-1}\delta$ used throughout the monograph.
+
+\paragraph{Takeaway.} The Lie-scale viewpoint explains \emph{why} the mother
+ratios close linearly near unity and \emph{how} the matrix $A$ is fixed by
+symmetry, not by ad-hoc modeling.
+% ===================== End Chapter 3 =====================
+
+% ===================== Chapter 4 =====================
+\section{Mother Ratios and Local Log-Linearization (Seed System)}
+
+\subsection{Near-Unity Variables (Dimensionless Hats)}
+We work entirely in the dimensionless hat-frame: 
+\[
+\hat\omega=\omega/\Omega_0=1+\varepsilon_\omega,\quad
+\hat\kappa=\kappa/B_0=1+\varepsilon_\kappa,\quad
+\hat b=b/C_0=1+\varepsilon_b,\quad
+\hat\rho=\rho/\rho_0=1+\varepsilon_\rho,\quad \|\varepsilon\|\ll1.
+\]
+Unit changes $t\mapsto s\,t$ co-scale the anchors so all hat-variables remain invariant (algebra in hats is unit/scale invariant). 
+{\small \textit{(H1 hats \& unit invariance)} \,}:contentReference[oaicite:0]{index=0}\,:contentReference[oaicite:1]{index=1}
+
+\subsection{Mother Ratios from the Scale Generator}
+Under the scale action $S_\lambda:(\kappa,\omega,b,\rho)\mapsto(\lambda^2\kappa,\lambda\omega,\lambda b,\lambda^{-1}\rho)$, the following three are invariant:
+\[
+\Pi_1=\frac{\kappa}{\omega^2},\qquad
+\Pi_2=\frac{b}{\omega},\qquad
+\Pi_3=\omega\rho,
+\]
+and we employ an anchor-assisted near-one ratio
+\[
+\Pi_4=\frac{\kappa b}{C\,\Omega_0}.
+\]
+We adopt the near-unity parameterization $\Pi_i=1+\delta_i$ with $\|\delta\|\ll1$. 
+{\small \textit{(Scale group \& invariant basis; anchor-assisted \(\Pi_4\))} }:contentReference[oaicite:2]{index=2}\,:contentReference[oaicite:3]{index=3}
+
+\subsection{Log-Linearization to the Seed System}
+Using $\log(1+x)=x+O(x^2)$ componentwise around the unity state yields
+\[
+-2\varepsilon_\omega+\varepsilon_\kappa=\delta_1,\quad
+-\varepsilon_\omega+\varepsilon_b=\delta_2,\quad
+\varepsilon_\omega+\varepsilon_\rho=\delta_3,\quad
+\varepsilon_\kappa+\varepsilon_b=\delta_4,
+\]
+which we write compactly as
+\[
+A\varepsilon=\delta,\qquad
+A=
+\begin{pmatrix}
+-2&1&0&0\\
+-1&0&1&0\\
+1&0&0&1\\
+0&1&1&0
+\end{pmatrix},\qquad \det A=-3\neq0.
+\]
+{\small \textit{(Matrix form and determinant)}} :contentReference[oaicite:4]{index=4}
+
+\subsection{Closed-Form Inverse and Component Formulas}
+Since $\det A\neq0$, the inverse exists and
+\[
+A^{-1}=\tfrac{1}{3}
+\begin{pmatrix}
+-1&-1&0&1\\
+1&-2&0&2\\
+-1&2&0&1\\
+1&1&3&-1
+\end{pmatrix},\qquad \varepsilon=A^{-1}\delta,
+\]
+so that
+\[
+\varepsilon_\omega=\tfrac{-\delta_1-\delta_2+\delta_4}{3},\quad
+\varepsilon_\kappa=\tfrac{\delta_1-2\delta_2+2\delta_4}{3},\quad
+\varepsilon_b=\tfrac{-\delta_1+2\delta_2+\delta_4}{3},\quad
+\varepsilon_\rho=\tfrac{\delta_1+\delta_2+3\delta_3-\delta_4}{3}.
+\]
+{\small \textit{(Exact inverse \& closed forms)}} :contentReference[oaicite:5]{index=5}
+
+\subsection{Quadratic Remainder and Sensitivity}
+Let $\delta=\log\Pi(1+\varepsilon)$ be the componentwise log-residual. Then
+\[
+\log\Pi(1+\varepsilon)=A\varepsilon+R(\varepsilon),\qquad 
+\|R(\varepsilon)\|_2\le\tfrac12\,M\,\|\varepsilon\|_2^2,
+\]
+and perturbations satisfy the standard bound 
+$\|\Delta\varepsilon\|\le\|A^{-1}\|\,\|\Delta\delta\|$.
+{\small \textit{(Quadratic remainder \& sensitivity)}} :contentReference[oaicite:6]{index=6}\,:contentReference[oaicite:7]{index=7}
+
+\subsection{Overdetermined Closures (Optional)}
+For $m\ge4$ relations $G\varepsilon\simeq\delta$ with a weight $W\succeq 0$,
+\[
+\hat\varepsilon=\arg\min_\varepsilon\|W^{1/2}(G\varepsilon-\delta)\|_2^2=(G^TWG)^{-1}G^TW\delta,\qquad
+\hat\varepsilon_\lambda=(G^TWG+\lambda I)^{-1}G^TW\delta,
+\]
+providing WLS and Tikhonov-regularized estimates in the same hat-frame.
+{\small \textit{(WLS/Tikhonov)}} :contentReference[oaicite:8]{index=8}
+
+\subsection{Recovery to Physical Variables (for Examples)}
+When needed for exemplification,
+\[
+\omega=\Omega_0(1+\varepsilon_\omega),\quad
+\kappa=B_0(1+\varepsilon_\kappa),\quad
+b=C_0(1+\varepsilon_b),\quad
+\rho=\rho_0(1+\varepsilon_\rho),
+\]
+matching the anchors declared in Chapter~2.
+{\small \textit{(Recovery with anchors)}} :contentReference[oaicite:9]{index=9}
+
+\paragraph{Takeaway.}
+The seed system \(A\varepsilon=\delta\) is a symmetry-fixed, scale-invariant closure of the mother ratios near unity. Its explicit inverse, remainder control, and WLS/Tikhonov extensions make it a robust bridge from measurements \(\delta\) to internal state \(\varepsilon\) in data-rich, multi-domain settings.
+% ===================== End Chapter 4 =====================
+
+% ===================== Chapter 5 =====================
+\section{Residual Dynamics and Lyapunov Dissipation}
+
+\subsection{Setup: Residual and Weighted Energy}
+Let $r:=A\varepsilon-\delta$ be the componentwise log-residual from Chapter~4.
+Choose $W\succeq 0$ and $\Lambda\succeq 0$ (often positive definite in practice)
+and define the residual-space Lyapunov candidate
+\begin{equation}
+V(\varepsilon) := \tfrac12\, r^\top W r .
+\label{eq:V_def}
+\end{equation}
+This is the same energy used in the notes and the v5.0 pack.{\small \,:contentReference[oaicite:0]{index=0}\,:contentReference[oaicite:1]{index=1}}
+
+\subsection{Gradient-Flow Residual Dynamics}
+Assume $W\succ0$ and $\Lambda\succ0$. The canonical residual-space gradient flow is
+\begin{equation}
+\dot\varepsilon \;=\; -\,\Lambda\,A^\top W\, (A\varepsilon-\delta)\,,
+\label{eq:gf_flow}
+\end{equation}
+with energy
+\begin{equation}
+V(\varepsilon)=\tfrac12(A\varepsilon-\delta)^\top W (A\varepsilon-\delta)\,.
+\label{eq:V_again}
+\end{equation}
+Along \eqref{eq:gf_flow},
+\begin{equation}
+\dot V \;=\; -\,(A\varepsilon-\delta)^\top W\, A\,\Lambda\,A^\top W\, (A\varepsilon-\delta) \;\le\; 0.
+\label{eq:Vdot_le0}
+\end{equation}
+Equations \eqref{eq:gf_flow}--\eqref{eq:Vdot_le0} match the recorded formulation.{\small \,:contentReference[oaicite:2]{index=2}\,:contentReference[oaicite:3]{index=3}}
+
+\subsection{Time Rescaling and Dimensionless Form}
+Let $\hat t := t/\tau_0$ (see Chapter~2 for anchors). Then
+\[
+\frac{d\varepsilon}{d\hat t} \;=\; -\,(\tau_0\Lambda)\,A^\top W\, (A\varepsilon-\delta)\,.
+\]
+Absorbing $\tau_0$ into $\hat\Lambda:=\tau_0\Lambda$ keeps the form \eqref{eq:gf_flow} unchanged and entirely dimensionless.{\small \,:contentReference[oaicite:4]{index=4}}
+
+\subsection{Well-Posedness: Choices of $W$ and $\Lambda$}
+The matrix $W$ encodes data fidelity (e.g.\ inverse covariance); $\Lambda$ sets the metric/step in residual space. With $W\succ0$ and $\Lambda\succ0$, \eqref{eq:Vdot_le0} shows strict dissipation unless $r=0$. In practice, one may:
+\begin{itemize}
+\item use diagonal $W$ for heteroscedastic residuals or $W=\Sigma^{-1}$ for correlated noise;
+\item precondition via $\Lambda$ (e.g.\ diagonal or quasi-Newton) to improve conditioning of $A^\top W A$.
+\end{itemize}
+Identifiability under overdetermined closures requires $\mathrm{rank}(G)=4$ (or $\mathrm{rank}(G^\top W G)=4$).{\small \,:contentReference[oaicite:5]{index=5}\,:contentReference[oaicite:6]{index=6}\,:contentReference[oaicite:7]{index=7}}
+
+\subsection{Rates and Conditioning}
+Linearizing \eqref{eq:gf_flow} about a fixed $\delta$ yields
+\[
+\dot\varepsilon = -\,\Lambda A^\top W A\,\varepsilon + \Lambda A^\top W\,\delta .
+\]
+The homogeneous part decays with a rate governed by the spectrum of 
+$H:=\Lambda^{1/2} (A^\top W A) \Lambda^{1/2}\succeq 0$.
+If $\lambda_{\min}(H)>0$, then
+\[
+V(t)\le V(0)\,e^{-2\,\lambda_{\min}(H)\, t}\quad\text{and}\quad \|r(t)\|_W \le \|r(0)\|_W\,e^{-\lambda_{\min}(H)\, t}.
+\]
+(See also the sensitivity and remainder bounds compiled earlier.){\small \,:contentReference[oaicite:8]{index=8}}
+
+\subsection{Discrete-Time Realizations}
+For a stepsize $\eta>0$, the explicit scheme
+\begin{equation}
+\varepsilon^{k+1} \;=\; \varepsilon^k \;-\; \eta\,\Lambda\,A^\top W\,(A\varepsilon^k-\delta)
+\label{eq:gd_scheme}
+\end{equation}
+is stable if $\eta<2/\lambda_{\max}(H)$ (same $H$ as above). One may add line search or use a Gauss--Newton update when $A$ is replaced by a Jacobian $J$ in a nonlinear extension.
+
+\subsection{Robust Extensions (Data-Rich)}
+When $m\ge 4$ relations $G\varepsilon\simeq\delta$ are available, a WLS or Tikhonov gate may be used to initialize $\varepsilon$ near the minimizer before running \eqref{eq:gd_scheme}:
+\[
+\hat\varepsilon=(G^\top W G)^{-1}G^\top W\delta,\qquad
+\hat\varepsilon_\lambda=(G^\top W G+\lambda I)^{-1}G^\top W\delta.
+\]
+These closures are stated in the source notes and dovetail with the gradient-flow layer.{\small \,:contentReference[oaicite:9]{index=9}}
+
+\subsection{Interface to the Field Layer (Preview)}
+The residual-space dissipation \eqref{eq:Vdot_le0} is consistent with the field-level, causal telegraph dynamics where the dispersion satisfies $\Re s<0$, ensuring finite-rate decay. This consistency is recorded in both the working notes and the consolidated v5.0 pack.{\small \,:contentReference[oaicite:10]{index=10}\,:contentReference[oaicite:11]{index=11}}
+
+\paragraph{Takeaway.}
+Equation \eqref{eq:gf_flow} provides a symmetry-consistent, dimensionless, and provably dissipative evolution from measurements $\delta$ to state $\varepsilon$. Its conditioning and rates are fully determined by $(A,W,\Lambda)$, and its structure aligns with the causal telegraph layer used later in the monograph.
+% ===================== End Chapter 5 =====================
+
+% ===================== Chapter 6 =====================
+\section{Unified Telegraph Dynamics (Stable, Causal)}
+
+\subsection{Dimensionless setting and notation}
+We adopt the global, dimensionless normalization introduced earlier:
+choose $(\ell_0,t_0,\Psi_0)$ and report all equations in hats thereafter
+(hats omitted for readability). A dimensionless Planck factor $\hat\hbar$
+may be absorbed into energy prefactors.%
+{\small \,:contentReference[oaicite:0]{index=0}}
+
+\paragraph{Fourier--Laplace convention.}
+Time derivatives map to $s\in\mathbb C$ and Laplacian to $-|k|^2$
+under $(\partial_t,\nabla^2)\mapsto(s,-|k|^2)$; $\tau>0$ and $c>0$
+denote the (dimensionless) relaxation time and finite propagation speed.%
+{\small \,:contentReference[oaicite:1]{index=1}}
+
+\subsection{Telegraph-stable core and dispersion}
+The unified (dimensionless) telegraph core for the coherence field $\Psi$ is
+\begin{equation}
+\tau\,\partial_t^2\Psi+\partial_t\Psi - c^2\nabla^2\Psi
+\;=\; \mathcal{F}(\Psi;\,a,\rho,J_{\!fb}) \;+\; \Gamma(\Psi_q,\varphi),
+\label{eq:telegraph_core}
+\end{equation}
+where the right-hand side collects divergence of fluxes and feedback currents
+(and may include weakly nonlinear source terms), together with causal stochastic
+forcing $\Gamma$.%
+{\small \,:contentReference[oaicite:2]{index=2}}
+
+\paragraph{Dispersion and stability window.}
+In the homogeneous limit of \eqref{eq:telegraph_core}, the dispersion relation is
+\begin{equation}
+\tau s^2+s+c^2|k|^2=0
+\quad\Longrightarrow\quad
+s(k)=\frac{-1\pm\sqrt{1-4\tau c^2|k|^2}}{2\tau}.
+\label{eq:dispersion}
+\end{equation}
+For $4\tau c^2|k|^2>1$ (underdamped), $\Re s=-\tfrac{1}{2\tau}$; otherwise
+$\,s\in\mathbb R_{<0}$ (over/critical damping). In all cases $\Re s<0$, ensuring
+finite-rate decay and causality.%
+{\small \,:contentReference[oaicite:3]{index=3}\,:contentReference[oaicite:4]{index=4}}
+
+\subsection{Stochastic assumptions (causality)}
+All stochastic sources are zero-mean and causal, with white-noise correlations
+of the form
+\[
+\langle \Gamma(\cdot)\rangle=0,\qquad
+\langle \xi(t)\rangle=0,\qquad
+\langle \xi(t)\,\xi(t')\rangle=2D\,\delta(t-t'),\quad D\ge0.
+\]
+These conventions keep the PDE layer compatible with the residual-space
+Lyapunov dissipation.%
+{\small \,:contentReference[oaicite:5]{index=5}\,:contentReference[oaicite:6]{index=6}}
+
+\subsection{Boundary conditions and well-posedness}
+To guarantee existence/uniqueness for the telegraph core (and the coupled phase
+equation used later), impose standard BCs on a bounded domain $\Omega$ or a
+torus $\mathbb T^d$:
+\begin{itemize}
+\item \textbf{Periodic} on $\mathbb T^d$;
+\item \textbf{Homogeneous Neumann} $\partial_n\Psi=0$ on $\partial\Omega$;
+\item \textbf{Dirichlet} $\Psi=\Psi_{\mathrm{bc}}$ on $\partial\Omega$ with compatible initial data.
+\end{itemize}
+Assume coefficients are bounded/measurable and the diffusion modulus is uniformly
+positive to retain parabolic/hyperbolic coercivity.%
+{\small \,:contentReference[oaicite:7]{index=7}}
+
+\subsection{Minimal energy estimate (compatibility with residual dissipation)}
+Define the field energy density (one convenient choice)
+\[
+\mathcal E(\Psi):=\tfrac12\,|\partial_t\Psi|^2+\tfrac{c^2}{2}\,|\nabla\Psi|^2,
+\]
+and $E(t)=\int_\Omega \mathcal E(\Psi)\,dx$. For the homogeneous core of
+\eqref{eq:telegraph_core} without stochastic/source terms, standard multipliers
+yield $\dot E\le 0$; the decay rate is controlled by the dispersion
+\eqref{eq:dispersion}. This is consistent with the residual-space Lyapunov law
+$\dot V\le0$ used in Chapters~4--5.%
+{\small \,:contentReference[oaicite:8]{index=8}\,:contentReference[oaicite:9]{index=9}}
+
+\subsection{Operator bridge from the local algebra}
+The telegraph operator arises naturally from the symbolic substitution layer
+that maps $(\omega,\kappa)\mapsto(i\partial_t,-\nabla^2)$ applied to the
+dimensionless near-one algebra of Chapter~4; after normalization (this section),
+the resulting PDE inherits scale invariance and the stability window.%
+{\small \,:contentReference[oaicite:10]{index=10}}
+
+\paragraph{Takeaway.}
+Equations \eqref{eq:telegraph_core}--\eqref{eq:dispersion} provide a
+dimensionless, symmetry-consistent, and provably \emph{stable} telegraph layer
+for $\Psi$, compatible with causal noise, standard boundary conditions, and the
+Lyapunov dissipation recorded at the residual level.
+% ===================== End Chapter 6 =====================
+
+% ===================== Chapter 7 =====================
+\section{Green's Functions and Boundary Data}
+
+\subsection{Dimensionless setting and operator}
+We work in the global dimensionless frame (hats suppressed); cf.\ the normalization
+$(\ell_0,t_0,\Psi_0)$ and the optional dimensionless Planck factor absorption.%
+{\small \,:contentReference[oaicite:0]{index=0}}
+The (dimensionless) telegraph-stable core reads
+\begin{equation}
+\tau\,\partial_t^2\Psi+\partial_t\Psi - c^2\nabla^2\Psi
+\;=\; \mathsf{S}(\mathbf x,t),
+\label{eq:telegraph_source}
+\end{equation}
+where $\mathsf{S}$ collects divergence of fluxes/feedbacks and (later) stochastic terms; Fourier--Laplace conventions are
+$(\partial_t,\nabla^2)\mapsto(s,-|k|^2)$.%
+{\small \,:contentReference[oaicite:1]{index=1}\,:contentReference[oaicite:2]{index=2}}
+
+\subsection{Fourier--Laplace fundamental solution (whole space)}
+Taking the spatial Fourier transform of \eqref{eq:telegraph_source} gives
+\[
+\tau\,\partial_t^2\widehat\Psi+\partial_t\widehat\Psi+c^2|k|^2\,\widehat\Psi=\widehat{\mathsf S}(k,t).
+\]
+The homogeneous dispersion relation is
+\begin{equation}
+\tau s^2+s+c^2|k|^2=0
+\quad\Longrightarrow\quad
+s_\pm(k)=\frac{-1\pm\sqrt{1-4\tau c^2|k|^2}}{2\tau},
+\label{eq:disp}
+\end{equation}
+with $\Re s_\pm(k)\le -\tfrac{1}{2\tau}$ in the underdamped window and $s_\pm\in\mathbb R_{<0}$ in the over/critical cases; hence $\Re s<0$ in all regimes.%
+{\small \,:contentReference[oaicite:3]{index=3}}
+The impulse response (Green’s function in $k$-space) solves
+\[
+\tau\,\partial_t^2\widehat G+\partial_t\widehat G+c^2|k|^2\widehat G=\delta(t),\qquad \widehat G(k,0^+)=0,
+\]
+yielding
+\begin{equation}
+\widehat G(k,t)
+=\frac{e^{s_+(k)t}-e^{s_-(k)t}}{\tau\big(s_+(k)-s_-(k)\big)}\;\mathbf 1_{t\ge0}.
+\label{eq:Ghat}
+\end{equation}
+Hence for zero initial data,
+\begin{equation}
+\widehat\Psi(k,t)
+=\int_0^t \widehat G(k,t-\sigma)\,\widehat{\mathsf S}(k,\sigma)\,d\sigma,
+\qquad
+\Psi(\cdot,t)=G(\cdot,t)*_{\mathbf x}\mathsf S(\cdot,t)\quad\text{(Duhamel)}.
+\label{eq:duhamel}
+\end{equation}
+The real-space kernel $G(\mathbf x,t)$ is obtained by inverse Fourier transform and inherits exponential decay rates from \eqref{eq:disp}.%
+{\small \,:contentReference[oaicite:4]{index=4}}
+
+\subsection{Compatibility with stochastic forcing}
+For causal, zero-mean noise with $\langle \xi(t)\rangle=0$ and
+$\langle \xi(t)\xi(t')\rangle=2D\,\delta(t-t')$,
+the mild solution remains well-defined via \eqref{eq:duhamel} under the same $\Re s<0$ window.%
+{\small \,:contentReference[oaicite:5]{index=5}\,:contentReference[oaicite:6]{index=6}}
+This stochastic convention and the stability window are part of the telegraph layer’s assumptions and validation checklist.%
+{\small \,:contentReference[oaicite:7]{index=7}}
+
+\subsection{Boundary data: spectral Green's functions on bounded domains}
+Let $\Omega\subset\mathbb R^d$ be bounded with smooth boundary.
+Adopt one of the standard boundary conditions to ensure well-posedness:
+\begin{enumerate}
+\item \textbf{Periodic} on $\mathbb T^d$;
+\item \textbf{Homogeneous Neumann} $\partial_n\Psi=0$ on $\partial\Omega$;
+\item \textbf{Dirichlet} $\Psi=\Psi_{\mathrm{bc}}$ on $\partial\Omega$ with compatible initial data.
+\end{enumerate}
+Assume bounded/measurable coefficients and a uniformly positive diffusion modulus to retain coercivity.%
+{\small \,:contentReference[oaicite:8]{index=8}\,:contentReference[oaicite:9]{index=9}}
+
+Let $\{-\nabla^2\phi_n=\lambda_n\phi_n\}$ be the Laplacian eigenbasis under the chosen BCs
+($\lambda_n\ge0$, $\{\phi_n\}$ orthonormal in $L^2(\Omega)$). The modal telegraph ODE is
+\[
+\tau\,\ddot \Psi_n+\dot \Psi_n + c^2\lambda_n \Psi_n = S_n(t),
+\qquad \Psi_n(t):=\langle \Psi(\cdot,t),\phi_n\rangle,
+\]
+with modal Green's function
+\[
+G_n(t)=\frac{e^{s_{+,n}t}-e^{s_{-,n}t}}{\tau(s_{+,n}-s_{-,n})}\,\mathbf 1_{t\ge0},
+\qquad
+s_{\pm,n}=\frac{-1\pm\sqrt{\,1-4\tau c^2\lambda_n\,}}{2\tau}.
+\]
+The full kernel is the eigen-expansion
+\begin{equation}
+G(\mathbf x,\mathbf y;t)=\sum_{n=1}^\infty G_n(t)\,\phi_n(\mathbf x)\phi_n(\mathbf y),
+\qquad
+\Psi(\mathbf x,t)=\int_0^t\!\!\int_\Omega G(\mathbf x,\mathbf y;t-\sigma)\,S(\mathbf y,\sigma)\,d\mathbf y\,d\sigma.
+\label{eq:spectralG}
+\end{equation}
+Under the BC/regularity assumptions above, the series converges (termwise exponentially) because $\Re s_{\pm,n}<0$ for all $\lambda_n\ge0$.%
+{\small \,:contentReference[oaicite:10]{index=10}}
+
+\subsection{Initial data and mixed problems}
+For initial data $\Psi(\cdot,0)=\Psi_0$ and $\partial_t\Psi(\cdot,0)=\Psi_1$,
+the solution adds the homogeneous contribution
+\[
+\Psi_{\mathrm{IC}}(\mathbf x,t)=\sum_{n}\Big(
+\alpha_n\,e^{s_{+,n}t}+\beta_n\,e^{s_{-,n}t}\Big)\phi_n(\mathbf x),
+\]
+with coefficients fixed by $(\Psi_0,\Psi_1)$ in the chosen basis.
+The Duhamel term \eqref{eq:spectralG} superposes linearly.
+
+\subsection{Energy and decay (consistency with residual layer)}
+Define $\mathcal E(\Psi)=\tfrac12|\partial_t\Psi|^2+\tfrac{c^2}{2}|\nabla\Psi|^2$ and
+$E(t)=\int_\Omega\mathcal E(\Psi)\,dx$.
+For the homogeneous telegraph core, the standard multiplier method yields $\dot E\le 0$, with decay rates controlled by \eqref{eq:disp}; this aligns with the residual-space Lyapunov law $\dot V\le 0$ compiled in the validation checklist.%
+{\small \,:contentReference[oaicite:11]{index=11}}
+
+\paragraph{Takeaway.}
+The Green’s function $G$ for the telegraph-stable operator exists in both whole-space and bounded-domain settings, decays at rates set by the dispersion roots, and supports causal stochastic forcing. The boundary-data spectral representation \eqref{eq:spectralG} provides a portable recipe for computation under periodic, Neumann, or Dirichlet constraints.
+% ===================== End Chapter 7 =====================
+
+% ===================== Chapter 8 =====================
+\section{Variational Phase Coupling and Gradient Flows}
+
+\subsection{Local phase variable and notation}
+Let $\varphi=\varphi(\mathbf x,t)\in\mathbb S^1$ be a dimensionless phase order
+parameter defined on a domain $\Omega\subset\mathbb R^d$ with time $t\ge0$.
+All quantities are already dimensionless (rad/s convention; hats suppressed).
+The coherence field $\Psi(\mathbf x,t)$ satisfies the telegraph-stable core of
+Chapter~6. Throughout this chapter, all couplings are local (K-free).
+
+\subsection{Energy functional (local-only, dimensionless)}
+We postulate a phase energy density that couples $\varphi$ to $\Psi$:
+\begin{equation}
+\mathcal E_\varphi(\varphi,\Psi)
+:= \frac{\kappa_\varphi}{2}\,|\nabla\varphi|^2
+   + U(\varphi; m_{\mathrm{eff}})
+   - J(\Psi)\,\cos\!\big(\varphi-\theta(\Psi)\big),
+\label{eq:phase_energy_density}
+\end{equation}
+where $\kappa_\varphi>0$ is a dimensionless stiffness,
+$U(\varphi;m_{\mathrm{eff}})$ is a smooth $2\pi$-periodic potential with
+effective parameter $m_{\mathrm{eff}}$, and $J(\Psi)\ge0$ is a local coupling
+gain depending only on the field amplitude at $(\mathbf x,t)$.
+The phase reference $\theta(\Psi)$ is a local argument of $\Psi$ (defined
+modulo $2\pi$). The total energy is
+\begin{equation}
+\mathcal F_\varphi[\varphi;\Psi] := \int_\Omega \mathcal E_\varphi(\varphi,\Psi)\,d\mathbf x .
+\label{eq:phase_energy_total}
+\end{equation}
+
+\paragraph{Design notes.}
+(i) Local-only: $J(\Psi)$ and $\theta(\Psi)$ are pointwise functions (no spatial
+integrals or kernels). (ii) K-free: no nonlocal knowledge factors enter.
+(iii) All parameters are dimensionless and can be anchored to $\Omega_0$ if
+needed for reporting.
+
+\subsection{Phase gradient flow and Lyapunov decrease}
+A canonical residual-free gradient flow for the phase is
+\begin{equation}
+\partial_t\varphi \;=\; -\,\Gamma_\varphi\,\frac{\delta \mathcal F_\varphi}{\delta\varphi} \;+\; \xi(\mathbf x,t),
+\qquad \Gamma_\varphi>0 ,
+\label{eq:phase_gf}
+\end{equation}
+with causal, zero-mean noise $\xi$ (dimensionless; optional).
+Using \eqref{eq:phase_energy_density}--\eqref{eq:phase_energy_total},
+\[
+\frac{\delta \mathcal F_\varphi}{\delta\varphi}
+= -\,\kappa_\varphi\,\nabla^2\varphi \;+\; \partial_\varphi U(\varphi;m_{\mathrm{eff}})
+ \;+\; J(\Psi)\,\sin\!\big(\varphi-\theta(\Psi)\big).
+\]
+Hence, in the deterministic case $\xi\equiv0$,
+\begin{equation}
+\frac{d}{dt}\,\mathcal F_\varphi[\varphi;\Psi]
+= -\,\Gamma_\varphi \int_\Omega \Big|\frac{\delta \mathcal F_\varphi}{\delta\varphi}\Big|^2\,d\mathbf x
+\;\le\; 0,
+\label{eq:phase_Lyapunov}
+\end{equation}
+so $\mathcal F_\varphi$ is a Lyapunov functional for the phase subsystem.
+
+\subsection{Coupling to the coherence field}
+Let $\Psi$ satisfy the telegraph core (Chapter~6) with a local feedback
+from $\varphi$:
+\begin{equation}
+\tau\,\partial_t^2\Psi+\partial_t\Psi - c^2\nabla^2\Psi
+\;=\; \mathcal F_{\mathrm{tel}}(\Psi) \;+\; \alpha_{\mathrm{cpl}}\,
+\sin\!\big(\varphi-\theta(\Psi)\big),
+\qquad \alpha_{\mathrm{cpl}}\in\mathbb R,
+\label{eq:telegraph_with_phase}
+\end{equation}
+where $\mathcal F_{\mathrm{tel}}$ collects admissible (local) source terms.
+The sign and magnitude of $\alpha_{\mathrm{cpl}}$ determine whether the phase
+acts as a restoring/locking feedback or a frustrative drive; the telegraph
+stability window $\Re s<0$ (Chapter~6) remains enforceable provided the local
+Lipschitz bounds on the right-hand side are respected.
+
+\subsection{Phase-lock calibration indices}
+Two convenient, dimensionless indicators are
+\begin{align}
+\rho_{\mathrm{lock}}(t)
+&:= \Big|\frac{1}{|\Omega|}\int_\Omega e^{\,i(\varphi(\mathbf x,t)-\theta(\Psi(\mathbf x,t)))}\,d\mathbf x\Big|
+\;\in[0,1], \label{eq:rho_lock}\\
+\chi_{\mathrm{lock}}(t)
+&:= 1 - \frac{\langle(\partial_t\varphi-\Omega_0)^2\rangle}{\langle(\partial_t\varphi)^2\rangle+\epsilon},
+\qquad \epsilon\ll1,
+\label{eq:chi_lock}
+\end{align}
+where $\langle\cdot\rangle$ denotes a spatial (or temporal) average and
+$\Omega_0$ is the central cadence (rad/s) fixed in Chapter~2. High values of
+$\rho_{\mathrm{lock}}$ and $\chi_{\mathrm{lock}}$ indicate phase and frequency
+locking to the central reference.
+
+\subsection{Equilibria and small-signal locking condition}
+Stationary points satisfy
+\begin{equation}
+-\kappa_\varphi\nabla^2\varphi + \partial_\varphi U(\varphi;m_{\mathrm{eff}})
++ J(\Psi)\,\sin(\varphi-\theta(\Psi)) = 0 .
+\label{eq:stationary_phase}
+\end{equation}
+Linearizing around a locked configuration $\varphi^\star=\theta(\Psi)$
+with $U''(\varphi^\star;m_{\mathrm{eff}})=\mu_\varphi\ge0$ gives, to first order,
+\[
+\partial_t \tilde\varphi \;\approx\; -\Gamma_\varphi\,
+\big(-\kappa_\varphi\nabla^2 + \mu_\varphi + J(\Psi)\big)\,\tilde\varphi ,
+\]
+so locking is (locally) attracting if $J(\Psi)$ dominates any destabilizing
+curvature of $U$ and the smallest eigenvalue of $-\kappa_\varphi\nabla^2$
+under the chosen BCs.
+
+\subsection{Boundary conditions and well-posedness}
+All BCs follow Chapter~6 (periodic, Neumann, Dirichlet) applied to $\varphi$
+and $\Psi$. With $\kappa_\varphi>0$, $\Gamma_\varphi>0$, and smooth $U$,
+the phase gradient flow is well-posed in $H^1(\Omega)$ and obeys
+\eqref{eq:phase_Lyapunov}. The coupled system with \eqref{eq:telegraph_with_phase}
+remains locally well-posed for sufficiently small Lipschitz constants of the
+source terms.
+
+\subsection{Simulation protocol (testable transition: Dynamics $\to$ Field)}
+\begin{enumerate}
+\item \textbf{No gradient (ablation):} set $\Gamma_\varphi=0$ in \eqref{eq:phase_gf};
+solve \eqref{eq:telegraph_with_phase} and track $\Re s(k)$ and
+$\rho_{\mathrm{lock}},\chi_{\mathrm{lock}}$; locking fails generically.
+\item \textbf{With gradient:} restore $\Gamma_\varphi>0$; locking emerges and
+the spectrum remains in the telegraph window $\Re s<0$.
+\end{enumerate}
+This pass/fail design obeys the governance rules (no circularity; falsifiable).
+% ===================== End Chapter 8 =====================
+
+% ===================== Chapter 9 =====================
+\section{Source Modeling: Forcing, Feedback Currents, and Coupling Operators}
+
+\subsection{Setting and notation (dimensionless, local-only)}
+We work in the global dimensionless frame (rad/s canonical; hats suppressed).
+The coherence field $\Psi(\mathbf x,t)$ satisfies the telegraph-stable core
+from Chapter~6; a local phase $\varphi(\mathbf x,t)$ may enter via Chapter~8.
+All operators and parameters below are pointwise in $(\mathbf x,t)$
+(\emph{K-free, local-only}).
+
+\subsection{Telegraph equation with general source grammar}
+We write the field dynamics as
+\begin{equation}
+\tau\,\partial_t^2\Psi + \partial_t\Psi - c^2\nabla^2\Psi
+\;=\; \mathsf S(\Psi,\varphi;\,\varepsilon,\delta) \;:=\;
+\underbrace{\nabla\!\cdot\mathsf q(\Psi)}_{\text{flux}}
+\;+\; \underbrace{\mathsf f_{\text{drv}}(\Psi)}_{\text{drives}}
+\;+\; \underbrace{\mathsf j_{\text{fb}}(\Psi,\varphi)}_{\text{feedback}}
+\;+\; \underbrace{\xi(\mathbf x,t)}_{\text{noise}} .
+\label{eq:telegraph_source_grammar}
+\end{equation}
+Here $(\varepsilon,\delta)$ denote the local residual/data features (Ch.~4--5).
+Each term is \emph{local} (no spatial integrals) and satisfies admissibility
+conditions listed below.
+
+\subsection{Constitutive forms for fluxes and drives}
+\paragraph{Flux (diffusive/hyperdiffusive).}
+A minimal local closure is
+\[
+\mathsf q(\Psi) := -D(\Psi)\,\nabla\Psi - \eta(\Psi)\,\nabla\partial_t\Psi ,
+\]
+with $D(\cdot),\eta(\cdot)\ge0$ smooth, bounded functions. The first term is
+Fick-like; the second is Kelvin--Voigt-like (rate damping). Both preserve
+$\Re s<0$ provided the coefficients are bounded.
+
+\paragraph{Drives (restoring, parametric, saturating).}
+Examples include
+\[
+\mathsf f_{\text{drv}}(\Psi)
+= -\,\alpha_1(\Psi)\,\Psi \;-\; \alpha_3(\Psi)\,|\Psi|^2\Psi
+\;+\; \beta_{\text{pm}}(\Psi)\,\cos(\Omega_0 t+\phi_0),
+\]
+where $\alpha_1,\alpha_3\ge0$ (local passivity) and $\beta_{\text{pm}}$ is a
+parametric drive with central cadence $\Omega_0$ fixed in Chapter~2.
+Saturation ($\alpha_3>0$) prevents blow-up and is compatible with the energy law.
+
+\subsection{Feedback currents and coupling operators}
+\paragraph{Phase feedback (from Chapter~8).}
+A canonical local coupling is
+\[
+\mathsf j_{\text{fb}}(\Psi,\varphi)
+= \alpha_{\mathrm{cpl}}\,\sin\big(\varphi-\theta(\Psi)\big),
+\]
+where $\alpha_{\mathrm{cpl}}\in\mathbb R$ and $\theta(\Psi)$ is the local
+argument of $\Psi$. The sign of $\alpha_{\mathrm{cpl}}$ selects locking vs.\
+frustration.
+
+\paragraph{Residual/data feedback (Seed-aware).}
+Let $r:=A\varepsilon-\delta$ be the local residual. A seed-aware feedback
+may be written as
+\[
+\mathsf j_{\text{fb}}^{(\mathrm{res})}(\Psi;\,r) \;=\;
+-\gamma_r\,\mathcal M(\Psi)\, r,
+\]
+with $\gamma_r\ge0$ and a bounded, local multiplier $\mathcal M(\Psi)$.
+This respects the governance rule (feedback used for falsification/testing;
+no circular definition, since $r$ is computed from measurements).
+
+\subsection{Noise models (causal, local)}
+We adopt zero-mean, causal models:
+\[
+\langle \xi(\mathbf x,t)\rangle=0,\qquad
+\langle \xi(\mathbf x,t)\,\xi(\mathbf x,t')\rangle
+= 2 D_\xi(\mathbf x)\,\delta(t-t'),
+\]
+with $D_\xi(\mathbf x)\ge 0$ bounded. Colored variants can be realized via
+auxiliary local ODEs driven by white noise.
+
+\subsection{Admissibility rules (ensure stability and well-posedness)}
+All source components in \eqref{eq:telegraph_source_grammar} must satisfy:
+\begin{enumerate}
+\item \textbf{Causality:} depend only on present/past values at $(\mathbf x,t)$.
+\item \textbf{Locality:} no spatial integrals or nonlocal kernels.
+\item \textbf{Lipschitz} on bounded sets: ensures local well-posedness.
+\item \textbf{Passivity / dissipativity:} the quadratic energy estimate
+$\,\dot E\le 0\,$ must hold for the homogeneous part; active drives must be
+bounded/saturated so the telegraph window $\Re s<0$ is preserved.
+\end{enumerate}
+
+\subsection{Energy budget and passivity check}
+Let the field energy be
+\[
+\mathcal E(\Psi)=\tfrac12|\partial_t\Psi|^2+\tfrac{c^2}{2}|\nabla\Psi|^2,\qquad
+E(t)=\int_\Omega \mathcal E(\Psi)\,d\mathbf x .
+\]
+Multiplying \eqref{eq:telegraph_source_grammar} by $\partial_t\Psi$ and integrating
+over $\Omega$ yields the budget
+\begin{equation}
+\dot E(t)
+= -\int_\Omega \Big( \tau\,|\partial_t^2\Psi|^2 + |\partial_t\Psi|^2
++ c^2\,\nabla\Psi\!\cdot\!\nabla\partial_t\Psi \Big)\,d\mathbf x
++ \int_\Omega \partial_t\Psi\;\mathsf S\,d\mathbf x .
+\label{eq:energy_budget}
+\end{equation}
+Under the flux/drive choices above, the source contribution is
+\[
+\int_\Omega \partial_t\Psi\,\nabla\!\cdot\mathsf q\,d\mathbf x
+= -\int_\Omega \nabla\partial_t\Psi\cdot \mathsf q\,d\mathbf x\;\le\; 0,
+\]
+and
+\[
+\int_\Omega \partial_t\Psi\,\big(-\alpha_1\Psi-\alpha_3|\Psi|^2\Psi\big)\,d\mathbf x
+\;\le\; 0,
+\]
+while parametric/feedback parts are balanced by saturation or
+small-gain conditions (see next subsection).
+
+\subsection{Small-gain / saturation conditions (telegraph window)}
+To preserve $\Re s<0$ across wavenumbers, impose either
+\begin{itemize}
+\item \textbf{Saturation:} $\alpha_3(\Psi)\ge \alpha_{3,\min}>0$ beyond a threshold.
+\item \textbf{Small-gain:} $\|\mathsf f_{\text{drv}}+\mathsf j_{\text{fb}}\|_{L^\infty}
+\le \gamma_\star \|\Psi\|$ with $\gamma_\star$ below the minimal damping rate
+set by $(\tau,c)$.
+\end{itemize}
+Both are local, dimensionless, and compatible with Ch.~6 energy estimates.
+
+\subsection{Calibration to $\Omega_0$ and $W_0$ (Option A)}
+All amplitudes are reported in the rad/s canonical frame. When a Hz report is
+needed, use $f_0=\Omega_0/(2\pi)$ for figures/tables (see Compatibility Note in
+Ch.~2). The measurement weight decomposes as
+\[
+W=W_0\,\widetilde W ,\qquad \Lambda=\lambda_0\,\widetilde\Lambda,
+\]
+with $W_0,\lambda_0>0$ scalars and tilde-objects dimensionless. Source gains
+($\beta_{\text{pm}}$, $\alpha_{\mathrm{cpl}}$, etc.) are scaled so that the
+energy budget \eqref{eq:energy_budget} remains dimensionless and portable.
+
+\subsection{Examples (domain-agnostic templates)}
+\begin{enumerate}
+\item \textbf{Linear restorative medium:} $D(\Psi)=D_0$, $\eta(\Psi)=0$,
+$\alpha_1(\Psi)=\alpha_1>0$, $\alpha_3=0$.
+\item \textbf{Saturating oscillator:} $D(\Psi)=D_0$, $\alpha_1>0$, $\alpha_3>0$
+(prevents runaway under parametric drive).
+\item \textbf{Phase-locked feedback:} $\alpha_{\mathrm{cpl}}>0$; monitor
+$\rho_{\text{lock}}$ and $\chi_{\text{lock}}$ (Ch.~8) for locking transitions.
+\item \textbf{Residual-aware correction:} add $-\gamma_r\mathcal M(\Psi)\,r$
+with small $\gamma_r$; use it as a falsification channel (not a definition).
+\end{enumerate}
+
+\subsection{Simulation checklist (testable transitions)}
+\begin{enumerate}
+\item \emph{Ablation:} remove flux ($D=\eta=0$) or saturation ($\alpha_3=0$)
+and demonstrate violation of the small-gain bound (loss of $\Re s<0$).
+\item \emph{Restore admissibility:} reinstate flux/saturation; verify
+$\Re s<0$, monotone energy decay, and (if feedback present) phase-lock emergence.
+\end{enumerate}
+
+\paragraph{Takeaway.}
+Equation \eqref{eq:telegraph_source_grammar} provides a compact, local-only
+grammar of sources and couplings for $\Psi$. The admissibility rules, energy
+budget, and calibration to $(\Omega_0,W_0)$ ensure stability and portability,
+aligning the source layer with the residual and phase-coupling layers.
+% ===================== End Chapter 9 =====================
+
+% ===================== Chapter 10 =====================
+\section{Energy--Coherence Law: Observables, Budgets, and Measurement Links}
+
+\subsection{Design goals}
+The Energy--Coherence Law serves three purposes:
+\begin{enumerate}
+\item \textbf{Compatibility:} agree with the telegraph layer (Ch.~6) and with
+the residual Lyapunov law $\dot V\le0$ (Ch.~5).
+\item \textbf{Observability:} provide a clean entry point for measured
+deviations $\delta$ (Ch.~4) without circular definitions.
+\item \textbf{Portability:} be dimensionless, K-free, and calibrated to the
+Option~A anchors ($\Omega_0$ in rad/s; Ch.~2).
+\end{enumerate}
+
+\subsection{Coherence energy density and field energy}
+Let $\Psi(\mathbf x,t)$ solve the telegraph-stable core (Ch.~6) with admissible
+sources (Ch.~9). Define the \emph{coherence energy density}
+\begin{equation}
+\mathcal E_{\text{coh}}(\Psi):=\frac{1}{2}\,|\partial_t\Psi|^2
++\frac{c^2}{2}\,|\nabla\Psi|^2
++\Phi(\Psi),
+\label{eq:E_coh_density}
+\end{equation}
+where $\Phi(\Psi)\ge0$ is a local potential chosen to reflect restorative
+or saturating effects consistent with the source grammar (Ch.~9).
+The total coherence energy is
+\begin{equation}
+E_{\text{coh}}(t):=\int_\Omega \mathcal E_{\text{coh}}(\Psi(\mathbf x,t))\,d\mathbf x.
+\label{eq:E_coh_total}
+\end{equation}
+
+\paragraph{Choices for $\Phi(\Psi)$.}
+Typical options:
+\begin{itemize}
+\item \emph{Linear restorative:} $\Phi(\Psi)=\tfrac{\alpha_1}{2}|\Psi|^2$, $\alpha_1\ge0$.
+\item \emph{Saturating:} $\Phi(\Psi)=\tfrac{\alpha_1}{2}|\Psi|^2+\tfrac{\alpha_3}{4}|\Psi|^4$,
+with $\alpha_3>0$ to prevent runaway under parametric drives.
+\end{itemize}
+Both choices are dimensionless under the Option~A normalization.
+
+\subsection{Residual-space energy and the bridge}
+Recall the residual $r:=A\varepsilon-\delta$ (Ch.~4) and the Lyapunov energy
+\begin{equation}
+V(\varepsilon;\delta):=\frac{1}{2}\,r^\top W r, \qquad \dot V\le 0
+\quad \text{under}\quad \dot\varepsilon=-\Lambda A^\top W r \ \text{(Ch.~5)}.
+\label{eq:residual_energy}
+\end{equation}
+To avoid circularity, we adopt the \emph{bridge principle}:
+\begin{equation}
+E_{\text{coh}}(t) \ \text{is computed from}\ \Psi \ \text{only},\qquad
+V(t)\ \text{is computed from}\ (\varepsilon,\delta)\ \text{only}.
+\label{eq:bridge_principle}
+\end{equation}
+Consistency is assessed by testing whether the \emph{observable predictions} of
+the field model produce measured residuals $\delta$ that are compatible with the
+seed closure (Ch.~4) when fed back for falsification.
+
+\subsection{Coherence budget (field level)}
+Multiply the telegraph equation (Ch.~6) by $\partial_t\Psi$ and integrate over
+$\Omega$ to obtain the budget
+\begin{equation}
+\dot E_{\text{coh}}(t)
+= - \mathcal D_{\text{tel}}(t) + \mathcal I_{\text{src}}(t),
+\label{eq:coh_budget}
+\end{equation}
+with
+\begin{equation}
+\mathcal D_{\text{tel}}(t):=\int_\Omega \big(\tau\,|\partial_t^2\Psi|^2
++|\partial_t\Psi|^2\big)\,d\mathbf x \ \ge 0 ,
+\qquad
+\mathcal I_{\text{src}}(t):=\int_\Omega \partial_t\Psi\;\mathsf S(\Psi,\varphi;\varepsilon,\delta)\,d\mathbf x .
+\label{eq:D_and_I}
+\end{equation}
+Under the admissibility rules (Ch.~9),
+flux terms contribute nonpositively (after integration by parts) and restorative
+drives are passive; parametric or feedback terms must satisfy small-gain or
+saturation bounds, keeping $\Re s<0$ and preventing growth of $E_{\text{coh}}$.
+
+\subsection{Energy--coherence law (statement)}
+\begin{definition}[Energy--Coherence Law]
+A source/coupling configuration satisfies the Energy--Coherence Law on
+$[0,T]$ if
+\begin{equation}
+\dot E_{\text{coh}}(t)\ \le\ 0
+\quad \text{for almost every } t\in[0,T],
+\label{eq:coh_law}
+\end{equation}
+with equality only at equilibria of the telegraph flow modulo admissible
+parametric modulations. The law is \emph{dimensionless}, \emph{local}, and
+\emph{K-free}.
+\end{definition}
+
+\subsection{Measurement links (observables and $\delta$)}
+Let $\mathcal O[\Psi]$ be a local observable (e.g., amplitude, phase, or bandpower
+of $\Psi$). A measurement model is a local map
+\begin{equation}
+\delta = \mathcal M\big(\mathcal O[\Psi]\big) + \eta, \qquad
+\eta\ \text{noise},\ \ \mathbb E[\eta]=0,
+\label{eq:measurement_model}
+\end{equation}
+with \emph{no} dependence on $\varepsilon$ in the definition (non-circular).
+The falsification loop is:
+\begin{enumerate}
+\item Use \eqref{eq:measurement_model} to obtain $\delta$ from field outputs.
+\item Solve the seed closure $A\varepsilon=\delta$ (Ch.~4) and evaluate $V$ (Ch.~5).
+\item If $V$ violates a prescribed tolerance, the source/feedback model
+is rejected or recalibrated (Ch.~9).
+\end{enumerate}
+
+\subsection{Calibration to $\Omega_0$ and $W_0$ (Option A)}
+We report frequencies in rad/s with the anchor $\Omega_0$ (Ch.~2).
+When needed for figures/tables, use $f_0=\Omega_0/(2\pi)$ (Hz) without altering
+the algebra. The measurement weight and metric are decomposed as
+\begin{equation}
+W=W_0\,\widetilde W,\qquad \Lambda=\lambda_0\,\widetilde\Lambda,
+\label{eq:W0_lambda0}
+\end{equation}
+with dimensionless $\widetilde W,\widetilde\Lambda$. The constants
+$(W_0,\lambda_0)$ set the absolute scales for data fidelity and dissipation rates.
+
+\subsection{Locking indicators and energy consistency}
+Define locking indices (Ch.~8)
+\[
+\rho_{\mathrm{lock}}(t),\quad \chi_{\mathrm{lock}}(t)\in[0,1],
+\]
+and record the \emph{consistency condition}:
+if the configuration is in the locking regime (high $\rho_{\mathrm{lock}}$ and
+$\chi_{\mathrm{lock}}$), then the measured residual energy should decrease on
+average,
+\begin{equation}
+\frac{d}{dt}\,\mathbb E[V(\varepsilon;\delta)] \ \le\ 0,
+\label{eq:residual_consistency}
+\end{equation}
+modulo noise and admissible parametric modulations, reflecting the alignment
+between field coherence and residual consistency.
+
+\subsection{Falsifiable tests (no circularity)}
+\begin{enumerate}
+\item \textbf{Ablation (fail expected):} remove saturation or violate the
+small-gain condition in the source grammar; observe $\dot E_{\text{coh}}>0$
+episodes or loss of $\Re s<0$ in the dispersion.
+\item \textbf{Restoration (pass expected):} reinstate admissibility; verify
+$\dot E_{\text{coh}}\le0$ and decreasing $V$ per \eqref{eq:residual_consistency}.
+\item \textbf{Mapping check (no circularity):} perturb the measurement model
+$\mathcal M$ and verify that the inferred $V$ reacts while $E_{\text{coh}}$
+remains computed purely from $\Psi$.
+\end{enumerate}
+
+\subsection{Domain-agnostic reporting protocol}
+For any domain (quantum, neural, or cosmic):
+\begin{enumerate}
+\item Fix $(\Omega_0,W_0)$ and report \emph{dimensionless} parameters.
+\item Publish the source grammar and admissibility constants.
+\item Provide $(E_{\text{coh}},V,\rho_{\mathrm{lock}},\chi_{\mathrm{lock}})$
+time series and pass/fail outcomes for the falsifiable tests.
+\end{enumerate}
+
+\paragraph{Takeaway.}
+The Energy--Coherence Law links field stability (telegraph budget),
+measurement consistency (residual energy), and calibration
+$(\Omega_0,W_0)$ without circularity. It is dimensionless, local-only,
+and testable across domains.
+% ===================== End Chapter 10 =====================
+
+% ===================== Chapter 11 =====================
+\section{Well-Posedness \& Regularity at Field Level (Deterministic \& Stochastic)}
+
+\subsection{Model, domain, and boundary conditions}
+Let $\Omega\subset\mathbb R^d$ be a bounded $C^{1,1}$ domain or a torus $\mathbb T^d$.
+We consider the telegraph-stable core with admissible sources (Ch.~9)
+\begin{equation}
+\tau\,\partial_t^2\Psi + \partial_t\Psi - c^2\nabla^2\Psi
+= \mathsf S(\Psi,\varphi;\varepsilon,\delta) \quad \text{in } \Omega\times(0,T],
+\label{eq:telegraph11}
+\end{equation}
+with initial data $(\Psi,\partial_t\Psi)|_{t=0}=(\Psi_0,\Psi_1)$ and one of:
+(i) periodic BC on $\mathbb T^d$,
+(ii) homogeneous Neumann $\partial_n\Psi=0$ on $\partial\Omega$,
+(iii) Dirichlet $\Psi=\Psi_{\mathrm{bc}}$ on $\partial\Omega$.
+All coefficients are dimensionless (Option~A; hats suppressed).
+
+\subsection{Function spaces and weak formulation}
+Write $H=L^2(\Omega)$, $V=H^1(\Omega)$ with the usual norms; when Dirichlet BC is used,
+replace $V$ by $H_0^1(\Omega)$. Let $\langle\cdot,\cdot\rangle$ be the $H$ inner product.
+A weak solution on $[0,T]$ satisfies, for all $\phi\in V$ and a.e.\ $t$,
+\[
+\langle \tau\,\partial_t^2\Psi + \partial_t\Psi,\phi\rangle
++ c^2\int_\Omega \nabla\Psi\cdot\nabla\phi\,dx
+= \int_\Omega \mathsf S(\Psi,\varphi;\varepsilon,\delta)\,\phi\,dx,
+\]
+with $\Psi\in L^\infty(0,T;V)$, $\partial_t\Psi\in L^\infty(0,T;H)$, and
+$\partial_t^2\Psi\in L^2(0,T;V')$.
+
+\subsection{Assumptions on the source grammar (local-only)}
+All source components are \emph{local} and satisfy:
+\begin{enumerate}
+\item \textbf{Causality}: depend on $(\mathbf x,t)$ and its past only.
+\item \textbf{Lipschitz} on bounded subsets of $(\Psi,\nabla\Psi,\partial_t\Psi)$:
+there exists $L>0$ s.t.
+$\|\mathsf S(u)-\mathsf S(v)\|_{H}\le L\,\|u-v\|_{V\times H}$.
+\item \textbf{Passivity/small-gain}: either saturating nonlinearity or small-gain
+bounds ensuring the Energy--Coherence budget (Ch.~10) holds, keeping $\Re s<0$.
+\end{enumerate}
+
+\subsection{Deterministic well-posedness}
+\begin{theorem}[Existence and uniqueness]
+Assume $\tau>0$, $c>0$, admissible BC, initial data $(\Psi_0,\Psi_1)\in V\times H$,
+and a source $\mathsf S$ satisfying the Lipschitz and passivity conditions above.
+Then there exists a unique weak solution
+\[
+\Psi \in L^\infty(0,T;V),\qquad
+\partial_t\Psi\in L^\infty(0,T;H),\qquad
+\partial_t^2\Psi\in L^2(0,T;V'),
+\]
+depending continuously on the data. If $\mathsf S$ is $C^1$ and
+$(\Psi_0,\Psi_1)\in H^2(\Omega)\cap V \times V$, then $\Psi$ is a strong solution
+with $\Psi\in C([0,T];H^2\cap V)$ and $\partial_t\Psi\in C([0,T];V)$.
+\end{theorem}
+
+\begin{proof}[Energy method (sketch)]
+Multiply \eqref{eq:telegraph11} by $\partial_t\Psi$ and integrate over $\Omega$;
+integration by parts (compatible with each BC) yields the coherence budget
+\[
+\dot E_{\text{coh}}(t)
+= -\int_\Omega \big(\tau\,|\partial_t^2\Psi|^2 + |\partial_t\Psi|^2\big)\,dx
++ \int_\Omega \partial_t\Psi\,\mathsf S\,dx,
+\]
+where $E_{\text{coh}}$ is as in Ch.~10. Passivity/small-gain makes the source
+term controlled; Grönwall then gives a priori bounds and uniqueness by difference
+estimates. Galerkin or semigroup approximations provide existence.
+\end{proof}
+
+\subsection{Mild formulation and semigroup viewpoint}
+Let $\mathcal A=\begin{psmallmatrix}0&I\\ c^2\Delta & -\tau^{-1}I\end{psmallmatrix}$
+on $\mathcal X=V\times H$ with domain $D(\mathcal A)=\{(u,v):u\in H^2\cap V,\,v\in V\}$.
+Then $\partial_t Z=\mathcal A Z + \mathcal N(Z)$ with
+$Z=(\Psi,\partial_t\Psi)$ and $\mathcal N(Z)=(0,\tau^{-1}\mathsf S)$
+admits a (nonlinear) variation-of-constants formula
+\[
+Z(t)=e^{t\mathcal A}Z(0)+\int_0^t e^{(t-s)\mathcal A}\,\mathcal N(Z(s))\,ds,
+\]
+equivalent to the spectral/Green representation (Ch.~7) under the same BCs.
+
+\subsection{Regularity and bootstraps}
+If $\mathsf S$ is $C^k$ in $\Psi$ with bounded derivatives on bounded sets,
+and data are smoother, standard elliptic/energy bootstraps give
+\[
+(\Psi_0,\Psi_1)\in H^{m+1}\times H^m \ \Rightarrow\
+\Psi\in C([0,T];H^{m+1})\cap C^1([0,T];H^{m}),
+\]
+subject to compatibility conditions at $t=0$ for Dirichlet BC.
+For periodic/Neumann BC, similar gains hold modulo constants.
+
+\subsection{Stochastic well-posedness (additive, causal noise)}
+Consider
+\[
+\tau\,\partial_t^2\Psi + \partial_t\Psi - c^2\nabla^2\Psi
+= \mathsf S(\Psi,\varphi;\varepsilon,\delta) + \xi(\mathbf x,t),
+\]
+with $\xi$ zero-mean, white-in-time, $L^2$-valued noise:
+$\mathbb E[\xi(\cdot,t)]=0$,
+$\mathbb E[\langle \xi(t),\phi\rangle\,\langle \xi(t'),\psi\rangle]
+= 2\langle Q\phi,\psi\rangle\,\delta(t-t')$ for a bounded, nonnegative $Q$.
+A mild (stochastic) solution on $[0,T]$ satisfies
+\[
+Z(t)=e^{t\mathcal A}Z(0)+\int_0^t e^{(t-s)\mathcal A}\,\mathcal N(Z(s))\,ds
++\int_0^t e^{(t-s)\mathcal A}\,(0,\tau^{-1}\,dW_Q(s)),
+\]
+where $W_Q$ is a $Q$-Wiener process. Under the same Lipschitz/small-gain bounds,
+one obtains existence/uniqueness in $L^2(\Omega; \mathcal X)$ and
+\[
+\mathbb E\,E_{\text{coh}}(t)\ +\ \mathbb E\!\int_0^t \!\!\!\int_\Omega
+\big(\tau\,|\partial_t^2\Psi|^2+|\partial_t\Psi|^2\big)\,dx\,ds
+\ \le\ C\big( \mathbb E\,E_{\text{coh}}(0) + t\,\mathrm{Tr}\,Q \big).
+\]
+
+\subsection{Continuous dependence and stability}
+Let $\Psi^{(1)}$, $\Psi^{(2)}$ solve \eqref{eq:telegraph11} with data/sources
+differing by at most $\delta$ in $V\times H$ and $L^2(0,T;H)$. Then
+\[
+\|\Psi^{(1)}-\Psi^{(2)}\|_{L^\infty(0,T;V)}^2
++\|\partial_t\Psi^{(1)}-\partial_t\Psi^{(2)}\|_{L^\infty(0,T;H)}^2
+\ \le\ C_T\,\delta^2,
+\]
+where $C_T$ depends on $(\tau,c)$ and the Lipschitz constants of $\mathsf S$.
+
+\subsection{Compatibility with residual and phase layers}
+The above analysis is \emph{local-only} and K-free: the source grammar does not
+depend on nonlocal parameters. The Energy--Coherence budget used here matches
+Ch.~10; residual-space dissipation (Ch.~5) and phase coupling (Ch.~8) are
+admissible via the small-gain/saturation constraints (Ch.~9) and do not violate
+the $\Re s<0$ window.
+
+\paragraph{Takeaway.}
+Under standard BCs and local admissibility assumptions, the telegraph field
+admits unique (weak/strong/mild) solutions with energy control, stability, and
+regularity compatible with the rest of the monograph. The stochastic extension
+inherits the same structure at the level of expectations.
+% ===================== End Chapter 11 =====================
+
+% ===================== Chapter 12 =====================
+\section{Numerical Schemes for Telegraph PDEs (Stability, CFL, Accuracy)}
+
+\subsection{Model, grid, and notation}
+We discretize $\Omega\subset\mathbb R^d$ on a Cartesian grid with spacing
+$\Delta x$ (assume $\Delta x_1=\cdots=\Delta x_d=\Delta x$ for simplicity) and
+time step $\Delta t>0$. Let $t^n=n\Delta t$, grid indices $i\in\mathbb Z^d$,
+and write $\Psi_i^n\approx \Psi(\mathbf x_i,t^n)$. Spatial derivatives use
+second-order centered differences; hats are suppressed (Option~A frame).
+
+\paragraph{Discrete Laplacian.}
+The standard $d$-D centered Laplacian reads
+\[
+(\Delta_h \Psi)_i
+= \frac{1}{\Delta x^2}\sum_{\ell=1}^{d}
+\big(\Psi_{i+e_\ell}-2\Psi_i+\Psi_{i-e_\ell}\big).
+\]
+On a periodic grid its Fourier symbol is
+\[
+\lambda_h(\boldsymbol\theta)
+= \frac{2}{\Delta x^2}\sum_{\ell=1}^{d}\big(\cos\theta_\ell-1\big)
+= -\frac{4}{\Delta x^2}\sum_{\ell=1}^{d}\sin^2(\theta_\ell/2)\ \le\ 0,
+\]
+with $|\lambda_h|\le \lambda_{\max}:=\frac{4d}{\Delta x^2}$.
+
+\subsection{Semi-discrete form and velocity variable}
+Introduce the velocity $V=\partial_t\Psi$ and write
+\[
+\partial_t\Psi = V,\qquad
+\tau\,\partial_t V + V - c^2\Delta \Psi = \mathsf S(\Psi,\varphi;\varepsilon,\delta).
+\]
+After space discretization, $(\Psi,V)$ solves an ODE system
+\[
+\dot \Psi = V,\qquad
+\tau\,\dot V + V - c^2 \Delta_h \Psi = \mathsf S_h(\Psi,\varphi;\varepsilon,\delta),
+\]
+to be advanced in time by one of the schemes below.
+
+\subsection{Baseline explicit (second order): leapfrog--Heun}
+A simple explicit, second-order pair combines centered second differences in time
+for $\Psi$ with a Heun predictor--corrector for the damping/source:
+\begin{align*}
+&\textbf{(LF)}\quad
+\tau\,\frac{\Psi_i^{n+1}-2\Psi_i^{n}+\Psi_i^{n-1}}{\Delta t^2}
++ \frac{\Psi_i^{n+1}-\Psi_i^{n-1}}{2\Delta t}
+- c^2(\Delta_h\Psi^n)_i
+= \mathsf S_h(\Psi^n,\varphi^n;\varepsilon^n,\delta^n),\\
+&\textbf{(Heun correction)}\quad
+\mathsf S_h^{*,n+1} := \mathsf S_h(\Psi^n,\varphi^n;\varepsilon^n,\delta^n),\quad
+\tilde\Psi^{\,n+1} := \text{solution of LF with }\mathsf S_h^{*,n+1},\\
+&\hspace{2.7cm}
+\mathsf S_h^{n+1} := \mathsf S_h(\tilde\Psi^{\,n+1},\varphi^{n+1};\varepsilon^{n+1},\delta^{n+1}),\\
+&\hspace{2.7cm}
+\text{re-solve LF with }\tfrac{1}{2}(\mathsf S_h^{*,n+1}+\mathsf S_h^{n+1}).
+\end{align*}
+\textbf{CFL guidance (explicit):}
+A conservative rule, derived by von Neumann on the homogeneous part, is
+\begin{equation}
+\frac{c\,\Delta t}{\Delta x}\ \le\ \frac{1}{\sqrt{d}},
+\qquad
+\Delta t\ \le\ 2\,\tau,
+\label{eq:CFL_explicit}
+\end{equation}
+ensuring that the leapfrog part resolves wave propagation and that the
+damping term $+\partial_t\Psi$ is not overstepped. In practice, pick
+$\Delta t=\min\big\{\sigma\,\tfrac{\Delta x}{c\sqrt d},\ \sigma_\tau\,2\tau\big\}$
+with safety factors $\sigma,\sigma_\tau\in(0,1)$.
+
+\subsection{Crank--Nicolson (CN) for linear core (unconditionally stable for the linear part)}
+Treat the linear telegraph operator implicitly and sources explicitly:
+\[
+\tau\,\frac{\Psi^{n+1}-2\Psi^{n}+\Psi^{n-1}}{\Delta t^2}
++\frac{\Psi^{n+1}-\Psi^{n-1}}{2\Delta t}
+- c^2\,\Delta_h\!\Big(\frac{\Psi^{n+1}+\Psi^{n-1}}{2}\Big)
+= \mathsf S_h(\Psi^{n},\varphi^{n};\varepsilon^{n},\delta^{n}).
+\]
+For periodic/Neumann BCs this leads to a symmetric positive definite (SPD)
+linear system per step. The linear homogeneous update is
+\emph{unconditionally A-stable} in the sense of the telegraph core; overall
+stability still requires admissible sources (Chapter~9).
+
+\subsection{IMEX (implicit diffusion, explicit damping/source)}
+A robust alternative is an IMEX (CN/AB2) split:
+\begin{align*}
+&\tau\,\frac{\Psi^{n+1}-2\Psi^{n}+\Psi^{n-1}}{\Delta t^2}
+- c^2\,\Delta_h\!\Big(\frac{\Psi^{n+1}+\Psi^{n-1}}{2}\Big)\\
+&\qquad = -\,\frac{\Psi^{n}-\Psi^{n-1}}{\Delta t}
++ \Big(\tfrac{3}{2}\mathsf S_h^{n}-\tfrac{1}{2}\mathsf S_h^{n-1}\Big).
+\end{align*}
+This keeps the stiff spatial operator implicit (unconditional for the linear
+part) while maintaining second-order accuracy and cheap explicit handling for
+damping and sources. Dirichlet BCs give an SPD system after enforcing boundary
+rows in $\Delta_h$.
+
+\subsection{Newmark family (single-parameter damping control)}
+Define $V^n\approx\partial_t\Psi^n$ and choose Newmark parameters
+$\beta\in[\tfrac16,\tfrac14]$, $\gamma\in[\tfrac12,1]$:
+\begin{align*}
+\Psi^{n+1} &= \Psi^{n} + \Delta t\,V^{n}
++ \Delta t^2\Big[(\tfrac12-\beta)\,A^{n}+\beta\,A^{n+1}\Big],\\
+V^{n+1} &= V^{n} + \Delta t\Big[(1-\gamma)\,A^{n}+\gamma\,A^{n+1}\Big],
+\end{align*}
+with acceleration $A^n$ defined by the semi-discrete telegraph ODE
+$\tau A^n + V^n - c^2\Delta_h\Psi^n = \mathsf S_h^n$.
+Choice $\beta=\tfrac14,\gamma=\tfrac12$ (average acceleration) is
+unconditionally stable for the linear part; taking $\gamma>\tfrac12$ adds
+numerical damping at high frequencies.
+
+\subsection{Discrete energy monitor (falsifiable stability check)}
+Adopt the discrete energy
+\[
+E_{\text{coh}}^{n}
+= \sum_i \Big(\tfrac12|V_i^{n}|^2
++ \tfrac{c^2}{2}\,|\nabla_h\Psi_i^{n}|^2 + \Phi(\Psi_i^n)\Big)\,\Delta x^d,
+\]
+with $\nabla_h$ the centered gradient and $\Phi$ matching Chapter~10.
+For the linear core, CN/IMEX/Newmark($\beta=\tfrac14,\gamma\ge\tfrac12$) yield
+monotone or nonincreasing $E_{\text{coh}}^{n}$ up to source/work terms,
+providing a \emph{testable} discrete analog of $\dot E_{\text{coh}}\le0$.
+
+\subsection{Boundary conditions}
+\begin{itemize}
+\item \textbf{Periodic}: wrap indices in $\Delta_h$; FFTs diagonalize the
+linear step (useful for CN/IMEX).
+\item \textbf{Neumann}: mirror values for ghost points or use one-sided
+second-order stencils satisfying $\partial_n\Psi=0$.
+\item \textbf{Dirichlet}: enforce $\Psi=\Psi_{\mathrm{bc}}$ on boundary nodes;
+modify rows in the linear system accordingly.
+\end{itemize}
+
+\subsection{Accuracy, dispersion, and diagnostics}
+All schemes above are second order in space (with centered differences).
+The time accuracy:
+\begin{itemize}
+\item LF--Heun: second order, explicit (subject to \eqref{eq:CFL_explicit}).
+\item CN: second order, unconditionally A-stable for linear core.
+\item IMEX (CN/AB2): second order if $\mathsf S_h$ is smooth.
+\item Newmark($\beta=\tfrac14$): second order; $\gamma$ controls numerical damping.
+\end{itemize}
+For dispersion, compare the numerical amplification factor $g(\theta)$ against the
+exact telegraph roots $s_\pm(k)$ (Chapter~6) by setting $\theta$ to grid modes
+$\boldsymbol\theta=\mathbf k\Delta x$; acceptable error keeps $\Re(\log g)/\Delta t<0$.
+
+\subsection{Reproducible test suite (pass/fail)}
+\begin{enumerate}
+\item \textbf{Homogeneous decay (no source):} start from a band-limited initial
+packet; verify $E_{\text{coh}}^n$ decreases and numerical dispersion follows
+$e^{s_\pm(k)t}$ within tolerance. \emph{Fail} if energy grows.
+\item \textbf{Source admissibility (Chapter~9):} add a parametric drive and
+saturation; \emph{pass} if $E_{\text{coh}}^n$ remains bounded and lock indices
+(Chapter~8) behave as predicted; \emph{fail} if violating small-gain yields
+growth.
+\item \textbf{Convergence}: refine $(\Delta x,\Delta t)$ with fixed CFL;
+observe second-order slopes in $L^2$ error vs. step size.
+\end{enumerate}
+
+\subsection{Practical parameter selection (Option A)}
+Set
+\[
+\Delta t=\min\Big\{\sigma\,\frac{\Delta x}{c\sqrt d},\ \sigma_\tau\,2\tau\Big\}
+\quad\text{(explicit)};\qquad
+\Delta t=\sigma_{\text{imp}}\,\frac{\Delta x}{c\sqrt d}\ \text{or larger}
+\quad\text{(CN/IMEX/Newmark)},
+\]
+with $\sigma,\sigma_\tau,\sigma_{\text{imp}}\in(0,1)$.
+Report all frequencies in rad/s; if Hz is needed for plots, use
+$f_0=\Omega_0/(2\pi)$ (Chapter~2, Compatibility Note).
+
+\paragraph{Takeaway.}
+Centered differences in space with CN/IMEX/Newmark time stepping yield robust,
+dimensionless, K-free integrators for the telegraph-stable field. Explicit
+LF--Heun can be used under a conservative CFL. Discrete energy monitoring
+provides a falsifiable stability check aligned with the Energy--Coherence Law.
+% ===================== End Chapter 12 =====================
+
+% ===================== Chapter 13 =====================
+\section{Robust Solutions of $A\varepsilon=\delta$: Conditioning, Bounds, and Diagnostics}
+
+\subsection{Models: square and overdetermined closures}
+\paragraph{Square (canonical H0--H4).}
+Let $A\in\mathbb R^{4\times 4}$ be the Jacobian from Chapter~4 with $\det A\neq0$.
+The seed closure solves
+\begin{equation}
+A\varepsilon=\delta,\qquad \varepsilon=A^{-1}\delta.
+\label{eq:seed_square}
+\end{equation}
+
+\paragraph{Overdetermined (data-rich).}
+Let $G\in\mathbb R^{m\times 4}$, $m\ge 4$, assemble additional near-unity
+relations. With a symmetric weight $W\succeq0$ (often $W=\Sigma^{-1}$),
+the weighted least-squares (WLS) estimator is
+\begin{equation}
+\hat\varepsilon=\arg\min_\varepsilon \|W^{1/2}(G\varepsilon-\delta)\|_2^2
+=(G^\top W G)^{-1}G^\top W\delta,
+\label{eq:WLS}
+\end{equation}
+whenever $\mathrm{rank}(G)=4$ and $G^\top W G\succ0$.
+
+\subsection{Conditioning and perturbation bounds}
+Write $\kappa_2(M)=\|M\|_2\|M^{-1}\|_2$ for the spectral condition number.
+
+\paragraph{Square case.}
+For small perturbations $(\Delta A,\Delta\delta)$, the first-order bound is
+\begin{equation}
+\frac{\|\Delta\varepsilon\|_2}{\|\varepsilon\|_2}
+\ \lesssim\ \kappa_2(A)\Big(
+\frac{\|\Delta A\|_2}{\|A\|_2} + \frac{\|\Delta\delta\|_2}{\|\delta\|_2}
+\Big),
+\qquad \Delta\varepsilon \approx A^{-1}(\Delta\delta-\Delta A\,\varepsilon).
+\label{eq:pert_square}
+\end{equation}
+In particular, with exact $A$,
+\begin{equation}
+\|\Delta\varepsilon\|_2 \le \|A^{-1}\|_2\,\|\Delta\delta\|_2.
+\label{eq:seed_sensitivity}
+\end{equation}
+
+\paragraph{WLS case.}
+Let $C:=W^{1/2}$ and $\tilde G:=C G$, $\tilde\delta:=C\delta$. Then
+\begin{equation}
+\hat\varepsilon=\tilde G^{\dagger}\,\tilde\delta,\qquad
+\|\Delta\hat\varepsilon\|_2\ \le\ \|\tilde G^{\dagger}\|_2\,\|\Delta\tilde\delta\|_2
+\ =\ \sigma_{\min}(\tilde G)^{-1}\,\|\Delta\tilde\delta\|_2,
+\label{eq:WLS_sensitivity}
+\end{equation}
+where $\sigma_{\min}(\tilde G)$ is the smallest singular value.
+
+\subsection{Scaling and preconditioning (dimensionless, local)}
+Although the algebra is in hats (dimensionless), numerical conditioning still
+benefits from equilibration.
+
+\paragraph{Diagonal equilibration.}
+Choose diagonal $D_r\succ0$, $D_c\succ0$ to balance row/column magnitudes:
+$\bar G:=D_r\,G\,D_c$. Solve $\bar G\,\bar\varepsilon=\bar\delta$ with
+$\bar\varepsilon=D_c^{-1}\varepsilon$, $\bar\delta=D_r\,\delta$.
+This reduces $\kappa_2$ while preserving invariance.
+
+\paragraph{QR with column pivoting (QRCP).}
+For $G$, compute $G\Pi = Q R$ with permutation $\Pi$. Then
+\[
+\hat\varepsilon=\Pi\,R_1^{-1}\,Q_1^\top\,\delta,
+\]
+where $R_1$ is the leading $4\times4$ block if $\mathrm{rank}(G)=4$.
+QRCP avoids squaring the condition number (unlike normal equations).
+
+\paragraph{Left preconditioning (WLS).}
+With $C=W^{1/2}$, solve $\min_\varepsilon\|\tilde G\varepsilon-\tilde\delta\|_2$
+by QR/SVD on $(\tilde G,\tilde\delta)$.
+
+\subsection{Regularization (Tikhonov) and filter factors}
+When $G$ is ill-conditioned or noisy, use zero-order Tikhonov:
+\begin{equation}
+\varepsilon_\lambda=(G^\top W G+\lambda I)^{-1}G^\top W \delta,\qquad \lambda>0.
+\label{eq:tikhonov}
+\end{equation}
+With $\tilde G=C G$ ($C=W^{1/2}$) and SVD $\tilde G=U\Sigma V^\top$,
+\begin{equation}
+\varepsilon_\lambda=V\,\underbrace{\mathrm{diag}\!\Big(
+\frac{\sigma_i}{\sigma_i^2+\lambda}\Big)}_{=:F_\lambda(\Sigma)}\,U^\top\,\tilde\delta,
+\label{eq:filter_factors}
+\end{equation}
+showing the \emph{filter factors} $f_i(\lambda)=\sigma_i/(\sigma_i^2+\lambda)$
+that suppress small singular directions.
+
+\paragraph{Choosing $\lambda$ (falsifiable rules).}
+\begin{itemize}
+\item \textbf{Discrepancy principle:} pick $\lambda$ s.t.
+$\|W^{1/2}(G\varepsilon_\lambda-\delta)\|_2 \approx \sqrt{m}\,\sigma_\eta$
+for noise level $\sigma_\eta$.
+\item \textbf{L-curve:} choose the corner of $\big(\log\|G\varepsilon_\lambda-\delta\|,
+\ \log\|\varepsilon_\lambda\|\big)$.
+\item \textbf{GCV (if cross-validation feasible):} minimize the generalized
+cross-validation score for WLS.
+\end{itemize}
+
+\subsection{Backward/forward errors and residual diagnostics}
+Let $r:=G\hat\varepsilon-\delta$ and define the weighted residual norm
+$\|r\|_W=\|W^{1/2}r\|_2$.
+
+\paragraph{Forward error proxy.}
+If a ground truth is unknown, estimate sensitivity by
+\[
+\mathrm{Amplification} := \|\tilde G^{\dagger}\|_2 \quad\text{with}\quad
+\tilde G=W^{1/2}G.
+\]
+
+\paragraph{Backward error (square case).}
+The minimal perturbation $(\Delta A,\Delta\delta)$ such that
+$(A+\Delta A)\hat\varepsilon=\delta+\Delta\delta$ obeys
+\[
+\frac{\|\Delta\delta\|_2}{\|\delta\|_2}
+\ \le\ \frac{\|r\|_2}{\|A\|_2\,\|\hat\varepsilon\|_2+\|\delta\|_2}.
+\]
+
+\paragraph{Leverage and influence (overdetermined).}
+Define the \emph{hat matrix}
+\[
+H:=G(G^\top W G)^{-1}G^\top W=\tilde G\,\tilde G^\dagger,
+\]
+then $h_{ii}$ (diagonal of $H$) measures the leverage of equation $i$.
+Standardized residuals $s_i:=r_i/\sqrt{(1-h_{ii})\,\hat\sigma^2}$ flag outliers
+(with $\hat\sigma^2$ estimated from $\|r\|_W^2/(m-4)$).
+
+\subsection{Uncertainty propagation (local, dimensionless)}
+If $\delta$ carries noise with covariance $\mathrm{Cov}(\delta)=\Sigma$ and
+$W=\Sigma^{-1}$, then the WLS covariance is
+\begin{equation}
+\mathrm{Cov}(\hat\varepsilon)\approx (G^\top W G)^{-1}.
+\label{eq:cov_WLS}
+\end{equation}
+If $\Sigma=\sigma_\eta^2\,W^{-1}$ (homoscedastic in $W$-metric),
+\(
+\mathrm{Cov}(\hat\varepsilon)\approx \sigma_\eta^2\,(G^\top W G)^{-1}.
+\)
+
+\subsection{Numerical solvers and recommendations}
+\begin{enumerate}
+\item \textbf{Square:} use QR or LU with equilibration; verify residual and
+backward error. Avoid forming $A^{-1}$ explicitly in floating point unless needed.
+\item \textbf{WLS:} form $\tilde G=W^{1/2}G$; solve by QR/SVD; avoid normal
+equations if conditioning is marginal.
+\item \textbf{Tikhonov:} prefer SVD route when $\kappa_2(\tilde G)$ is large;
+use filter factors \eqref{eq:filter_factors}.
+\item \textbf{Diagnostics:} always report $\|r\|_W$, $\sigma_{\min}(\tilde G)$,
+$\kappa_2(\tilde G)$, and, when applicable, leverage $h_{ii}$.
+\end{enumerate}
+
+\subsection{Falsifiable test plan (local-only)}
+\begin{enumerate}
+\item \emph{Noise scaling:} inject Gaussian noise with known $\sigma_\eta$;
+verify $\|W^{1/2}(G\hat\varepsilon-\delta)\|_2\approx \sqrt{m}\,\sigma_\eta$
+(discrepancy) and empirical coverage from \eqref{eq:cov_WLS}.
+\item \emph{Ill-conditioning:} synthesize $G$ with a controlled singular value
+drop; show that Tikhonov improves stability and that the error follows
+filter factors.
+\item \emph{Outlier resistance:} flip a small subset of equations; leverage
+and standardized residuals flag them; refit after downweighting.
+\end{enumerate}
+
+\subsection{Compact algorithms (pseudo-code)}
+\paragraph{WLS via QR (local, dimensionless).}
+\begin{enumerate}
+\item Build $\tilde G=W^{1/2}G$, $\tilde\delta=W^{1/2}\delta$.
+\item Compute $\tilde G=Q R$ (thin QR); solve $R\hat\varepsilon=Q^\top\tilde\delta$.
+\item Diagnostics: residual $\|Q^\top(\tilde G\hat\varepsilon-\tilde\delta)\|_2$,
+$\sigma_{\min}$ via $\mathrm{chol}(R^\top R)$ or SVD if needed.
+\end{enumerate}
+
+\paragraph{Tikhonov via SVD.}
+\begin{enumerate}
+\item SVD: $\tilde G=U\Sigma V^\top$.
+\item Choose $\lambda$ (discrepancy/L-curve/GCV).
+\item Compute $\varepsilon_\lambda=V F_\lambda(\Sigma)U^\top\tilde\delta$.
+\end{enumerate}
+
+\paragraph{Square solve with backward error.}
+\begin{enumerate}
+\item Solve $A\hat\varepsilon=\delta$ (QR/LU).
+\item Compute $r=A\hat\varepsilon-\delta$ and backward error proxy
+$\eta=\|r\|_2 / (\|A\|_2\|\hat\varepsilon\|_2+\|\delta\|_2)$.
+\item If $\eta$ exceeds tolerance, apply equilibration or switch to WLS/Tikhonov.
+\end{enumerate}
+
+\paragraph{Takeaway.}
+The seed closure admits robust, dimensionless solvers with quantifiable
+sensitivity, diagnostics, and uncertainty. QR/SVD with WLS/Tikhonov gives
+portable routines that respect the governance rules and remain K-free/local-only.
+% ===================== End Chapter 13 =====================
+
+% ===================== Chapter 14 =====================
+\section{Algorithms in Residual Space: Gradient, (Gauss-)Newton, and Line Search}
+
+\subsection{Problem statements (local-only)}
+Given a residual map $r(\varepsilon)$ and a weight $W\succeq0$, define
+\[
+V(\varepsilon)\;:=\;\tfrac12\,r(\varepsilon)^\top W\,r(\varepsilon).
+\]
+Two cases appear throughout the monograph:
+\begin{enumerate}
+\item \textbf{Linear seed/data-rich:} $r(\varepsilon)=G\varepsilon-\delta$ with $G\in\mathbb R^{m\times 4}$; $A$ is the $4\times4$ seed case (Ch.~4).
+\item \textbf{Mildly nonlinear:} $r(\varepsilon)=F(\varepsilon)-\delta$, with $F:\mathbb R^{4}\to\mathbb R^{m}$ smooth and $J(\varepsilon):=\partial F/\partial\varepsilon$.
+\end{enumerate}
+All quantities are in the hat-frame (dimensionless; Option~A), evaluated locally at each space–time location.
+
+\subsection{Gradient flow and gradient descent}
+The weighted gradient and a continuous-time flow are
+\[
+\nabla V(\varepsilon)=J(\varepsilon)^\top W\,r(\varepsilon),\qquad
+\dot\varepsilon=-\Lambda\,\nabla V(\varepsilon),
+\]
+with $\Lambda\succeq0$ (Ch.~5). A basic discrete update is
+\begin{equation}
+\varepsilon^{k+1}=\varepsilon^k-\eta_k\,\Lambda_k\,\nabla V(\varepsilon^k),
+\label{eq:gd}
+\end{equation}
+where $\eta_k>0$ is the stepsize and $\Lambda_k$ a (possibly changing) preconditioner.
+For the linear case $r=G\varepsilon-\delta$, $\nabla V=G^\top W(G\varepsilon-\delta)$.
+
+\subsection{Gauss--Newton and Levenberg--Marquardt}
+For $r(\varepsilon)=F(\varepsilon)-\delta$, the Gauss--Newton step solves
+\begin{equation}
+\big(J^\top W J\big)\,p_k=-J^\top W\,r,\qquad \varepsilon^{k+1}=\varepsilon^k+p_k.
+\label{eq:GN}
+\end{equation}
+When $J^\top W J$ is ill-conditioned or rank-deficient, use the LM (trust-region) variant
+\begin{equation}
+\big(J^\top W J+\lambda_k I\big)\,p_k=-J^\top W\,r,\qquad \lambda_k>0,
+\label{eq:LM}
+\end{equation}
+with $\lambda_k$ adjusted by a ratio test (see below). For linear $F(\varepsilon)=G\varepsilon$, \eqref{eq:GN} reduces to the WLS normal equations (Ch.~13).
+
+\subsection{Line searches (Armijo/Wolfe) and step selection}
+Given a descent direction $d_k$ (from \eqref{eq:gd}, \eqref{eq:GN}, or \eqref{eq:LM}), choose $\eta_k$ by backtracking to satisfy Armijo (sufficient decrease):
+\[
+V(\varepsilon^k+\eta_k d_k)\ \le\ V(\varepsilon^k)+c_1\,\eta_k\,\nabla V(\varepsilon^k)^\top d_k,\quad c_1\in(0,1).
+\]
+When curvature control is desired, enforce Wolfe conditions. For cheap heuristics, Barzilai--Borwein steps can be used in the linear case; ensure safeguards to keep $V$ decreasing.
+
+\subsection{Trust-region update (ratio test)}
+For LM, define the predicted reduction $\mathrm{pred}_k:= -\tfrac12\,p_k^\top(J^\top W J+\lambda_k I)\,p_k$ and the actual reduction $\mathrm{ared}_k:=V(\varepsilon^k)-V(\varepsilon^k+p_k)$. Let $\rho_k:=\mathrm{ared}_k/\mathrm{pred}_k$:
+\[
+\lambda_{k+1}=
+\begin{cases}
+\tfrac{1}{\nu}\lambda_k, & \rho_k>\rho_{\text{hi}} \ (\text{step very successful}),\\[2pt]
+\lambda_k, & \rho_{\text{lo}}\le \rho_k\le \rho_{\text{hi}},\\[2pt]
+\nu\lambda_k, & \rho_k<\rho_{\text{lo}} \ (\text{reject or shrink step}),
+\end{cases}
+\]
+with $0<\rho_{\text{lo}}<\rho_{\text{hi}}<1$ and $\nu>1$. Accept the step if $\rho_k\ge\rho_{\text{lo}}$.
+
+\subsection{Preconditioning and scaling (dimensionless but numerically vital)}
+Even in the hat-frame, numerical conditioning benefits from preconditioning.
+\begin{itemize}
+\item \textbf{Diagonal equilibration:} scale rows/cols of $G$ (or $J$) to unit magnitude; apply the same transform to $\varepsilon$ and $\delta$.
+\item \textbf{Quasi-Newton metric:} choose $\Lambda_k\approx (G^\top W G)^{-1}$ (linear) or $\Lambda_k\approx (J^\top W J)^{-1}$ (nonlinear) when cheap approximations exist.
+\item \textbf{Projected metric:} if constraints are present (next section), restrict the metric to the feasible tangent space.
+\end{itemize}
+
+\subsection{Constraints (box, $\ell_1$, and feasibility)}
+Local constraints appear naturally (e.g., bounds for near-unity deviations).
+\begin{enumerate}
+\item \textbf{Box constraints:} $\ell\le \varepsilon\le u$ via projected gradient:
+$\varepsilon^{k+1}=\Pi_{[\ell,u]}(\varepsilon^k-\eta_k\Lambda_k\nabla V)$.
+\item \textbf{$\ell_1$-regularization (sparse deviations):} minimize 
+$V+\lambda\|\varepsilon\|_1$ by soft-thresholding after a gradient or proximal step.
+\item \textbf{Feasibility first:} if the initial $\varepsilon^0$ violates constraints, project once before iterations.
+\end{enumerate}
+
+\subsection{Stopping criteria and diagnostics}
+Terminate when any of the following holds:
+\[
+\|\nabla V(\varepsilon^k)\|_\infty \le \epsilon_g,\quad
+\|d_k\|_2 \le \epsilon_x(1+\|\varepsilon^k\|_2),\quad
+\frac{|V(\varepsilon^{k})-V(\varepsilon^{k-1})|}{\max\{1,V(\varepsilon^{k-1})\}}\le \epsilon_V,
+\]
+or upon reaching a maximum iteration budget. Always report
+$\|r\|_{W}$, $\sigma_{\min}$ of $(G^\top W G)$ or $(J^\top W J)$,
+and (if LM) the accepted $\rho_k$ sequence.
+
+\subsection{Convergence remarks (local)}
+Under standard assumptions (Lipschitz $J$, positive-definite $J^\top W J$ on a neighborhood, and bounded line-search parameters), gradient descent with backtracking converges to a first-order stationary point. Gauss--Newton is locally (super)linear when second-order terms are small; LM inherits global robustness and local fast convergence as $\lambda_k\to0$.
+
+\subsection{Pseudocode (local-only, dimensionless)}
+\paragraph{Projected Gauss--Newton / LM (with backtracking).}
+\begin{algorithmic}[1]
+\State \textbf{Input:} initial $\varepsilon^0$, weight $W$, tolerance $(\epsilon_g,\epsilon_x,\epsilon_V)$, bounds $[\ell,u]$ (optional).
+\For{$k=0,1,2,\dots$}
+  \State Form $r=F(\varepsilon^k)-\delta$, $J=\partial F/\partial\varepsilon$.
+  \State Compute search direction $p_k$ from \eqref{eq:GN} or \eqref{eq:LM}.
+  \State If bounds: $p_k \leftarrow \Pi_{T_{\varepsilon^k}}(p_k)$ (project to feasible tangent).
+  \State Backtracking: choose $\eta_k\in(0,1]$ (Armijo); set $\tilde\varepsilon=\Pi_{[\ell,u]}(\varepsilon^k+\eta_k p_k)$.
+  \State If LM: evaluate $\rho_k$ and update $\lambda_{k+1}$ by the ratio test.
+  \State Update: $\varepsilon^{k+1}\leftarrow \tilde\varepsilon$.
+  \State Check stopping criteria; break if satisfied.
+\EndFor
+\end{algorithmic}
+
+\paragraph{Projected preconditioned gradient (seed/data-rich).}
+\begin{algorithmic}[1]
+\State $\varepsilon^{k+1}=\Pi_{[\ell,u]}\big(\varepsilon^k-\eta_k\,\Lambda_k\,G^\top W(G\varepsilon^k-\delta)\big)$.
+\State Choose $\eta_k$ by backtracking; update $\Lambda_k$ by diagonal equilibration.
+\end{algorithmic}
+
+\subsection{Falsifiable tests (governance-compliant)}
+\begin{enumerate}
+\item \textbf{Monotone decrease:} verify $V(\varepsilon^{k+1})\le V(\varepsilon^k)$ for accepted steps.
+\item \textbf{Ill-conditioning ablation:} degrade conditioning of $G$/$J$; show LM stabilizes while plain GN fails.
+\item \textbf{Constraint check:} inject infeasible $\varepsilon^0$; verify projection keeps $V$ decreasing and feasibility preserved.
+\item \textbf{Noise robustness:} add noise with known covariance; assess coverage using $(G^\top W G)^{-1}$ as in Ch.~13.
+\end{enumerate}
+
+\subsection{Interfaces to other layers}
+The residual-space algorithms are \emph{local-only} and feed:
+(i) the field layer via source calibration and falsification (Ch.~9--10),
+(ii) the phase layer via indices $\rho_{\mathrm{lock}},\chi_{\mathrm{lock}}$ (Ch.~8),
+and (iii) the numerical PDE layer via data assimilation hooks (Ch.~12),
+without introducing nonlocal dependencies.
+\paragraph{Takeaway.} Residual-space optimization admits a principled toolbox---gradient, Gauss--Newton/LM, and line search/trust-region---that is dimensionless, K-free, and falsifiable, providing stable bridges between data $\delta$ and internal state $\varepsilon$.
+% ===================== End Chapter 14 =====================
+
+% ===================== Chapter 15 =====================
+\section{Data Models \& Noise: Weights $W$, Covariances, and Calibration}
+
+\subsection{Measurement model (local-only, non-circular)}
+Let $\mathcal O[\Psi]$ be a local observable (amplitude, phase, bandpower, etc.)
+built from the coherence field $\Psi$ (Ch.~10). Measurements are modeled as
+\begin{equation}
+\delta \;=\; \mathcal M\!\big(\mathcal O[\Psi]\big) \;+\; \eta,
+\qquad \mathbb E[\eta]=0,
+\label{eq:meas15}
+\end{equation}
+with $\eta$ a local noise term. The definition of $\delta$ contains no $\varepsilon$
+(Seed variables), avoiding circularity. Residual inference proceeds via
+$A\varepsilon=\delta$ (Ch.~4) or $G\varepsilon\simeq\delta$ (Ch.~13).
+
+\subsection{Noise families and local statistics}
+We consider dimensionless, local noise models:
+\begin{align*}
+\text{Gaussian: }& \eta\sim\mathcal N(0,\Sigma),\\
+\text{Laplace: }& p(\eta)\propto \exp\!\big(-\|\eta\|_{1,\Lambda}\big),\\
+\text{Student-\emph{t}}:&\ p(\eta)\propto \prod_i \big(1+\tfrac{1}{\nu}\eta_i^2/s_i^2\big)^{-(\nu+1)/2},
+\end{align*}
+where $\Sigma\succeq0$ is a local covariance, $\Lambda\succ0$ is a diagonal
+scale for Laplace (componentwise), and $(\nu,s_i)$ are degrees-of-freedom and
+scales for heavy tails. Families are chosen per-sensor or per-feature, locally
+in space--time.
+
+\subsection{Weights, whitening, and the Mahalanobis metric}
+For Gaussian noise, the negative log-likelihood gives the \emph{Mahalanobis} loss
+\begin{equation}
+V(\varepsilon)=\tfrac12\,(G\varepsilon-\delta)^\top W\,(G\varepsilon-\delta),
+\qquad W=\Sigma^{-1}\succeq 0,
+\label{eq:mahal}
+\end{equation}
+(Ch.~13). Whitening uses $C=W^{1/2}$:
+\[
+\tilde G:=CG,\quad \tilde\delta:=C\delta,\quad
+V(\varepsilon)=\tfrac12\|\tilde G\varepsilon-\tilde\delta\|_2^2.
+\]
+If $\Sigma$ is unknown, estimate \emph{locally} via windowed statistics
+(rolling mean/variance or robust MAD) and form $W$ accordingly.
+
+\subsection{Heteroscedasticity and correlation}
+\paragraph{Diagonal (heteroscedastic).} If components have different local variances
+$\sigma_i^2$, set $W=\mathrm{diag}(\sigma_1^{-2},\dots,\sigma_m^{-2})$.
+\paragraph{Correlated.} For a short window $\mathcal W$ around $(\mathbf x,t)$
+collect centered samples $\{\hat\delta^{(s)}\}$ and use
+\[
+\hat\Sigma=\frac{1}{|\mathcal W|-1}\sum_{s\in\mathcal W}\hat\delta^{(s)}\hat\delta^{(s)\top},
+\qquad W=\hat\Sigma^{-1} \ \ \text{(regularized if needed)}.
+\]
+Regularize by $\hat\Sigma_\lambda=(1-\lambda)\hat\Sigma+\lambda\,\mathrm{diag}(\hat\Sigma)$
+with $\lambda\in[0,1)$ to maintain positive definiteness.
+
+\subsection{Robust losses via IRLS (local-only)}
+To resist outliers or heavy tails, minimize a robust loss
+\[
+V_\rho(\varepsilon)=\sum_{i=1}^m \rho\big((r_i/\sigma_i)\big),
+\quad r:=G\varepsilon-\delta,
+\]
+where $\rho$ is Huber or Tukey’s biweight and $\sigma_i$ are local scales.
+\paragraph{IRLS (Iteratively Reweighted Least Squares).}
+At iteration $k$, set weights $w_i^{(k)}:=\psi(z_i^{(k)})/z_i^{(k)}$ with
+$z_i^{(k)}=r_i^{(k)}/\sigma_i$ and $\psi=\rho'$; solve
+\[
+\varepsilon^{(k+1)}=\arg\min_\varepsilon
+\sum_i w_i^{(k)} \Big(\frac{r_i}{\sigma_i}\Big)^2
+\quad\Longleftrightarrow\quad
+\hat W^{(k)}=\mathrm{diag}\!\Big(\frac{w_i^{(k)}}{\sigma_i^2}\Big),\ 
+(G^\top \hat W^{(k)} G)\varepsilon=G^\top \hat W^{(k)}\delta.
+\]
+Stop by residual/gradient tolerances (Ch.~14). All operations remain local.
+
+\subsection{Bias, variance, and sandwich corrections}
+When the noise model is misspecified, use the \emph{sandwich} covariance
+\[
+\widehat{\mathrm{Cov}}(\hat\varepsilon)
+\approx (G^\top W G)^{-1}\Big(G^\top W\,\widehat S\,W G\Big)(G^\top W G)^{-1},
+\quad \widehat S := \sum_i r_i^2\,e_i e_i^\top,
+\]
+where $e_i$ are standard basis vectors. For IRLS, plug in the effective weights.
+
+\subsection{Local calibration to $\Omega_0$ and $W_0$ (Option A)}
+All frequencies are reported in rad/s with anchor $\Omega_0$ (Ch.~2; Compatibility Note).
+When Hz is needed, use $f_0=\Omega_0/(2\pi)$ for reporting only. Decompose
+\begin{equation}
+W=W_0\,\widetilde W,\qquad \Lambda=\lambda_0\,\widetilde\Lambda,
+\label{eq:W_decomp}
+\end{equation}
+with $\widetilde W,\widetilde\Lambda$ dimensionless and local. $W_0>0$ sets the
+absolute data-fidelity scale; tune $W_0$ by a discrepancy target
+$\mathbb E[\|W^{1/2}(G\hat\varepsilon-\delta)\|_2^2]\approx m$ (per window).
+
+\subsection{Windowing, stationarity, and short-time spectra}
+To maintain locality, estimate statistics over short windows (e.g., $K$ samples or a
+small spatial patch). For phase/frequency observables, use short-time Fourier
+windows aligned with $\Omega_0$ so that variance estimates reflect the local cadence.
+Avoid windows so long that nonstationarity contaminates $\Sigma$.
+
+\subsection{Model selection and hyperparameters (falsifiable)}
+Choose among Gaussian/Laplace/$t$ and set hyperparameters by local cross-validation
+or information criteria computed per window. A configuration is accepted only if:
+(i) Energy--Coherence budget holds (Ch.~10), and
+(ii) residual diagnostics (Ch.~13) pass thresholds.
+
+\subsection{Diagnostics and acceptance rules}
+Always report (per window):
+\[
+\|r\|_{W},\quad \sigma_{\min}(G^\top W G),\quad
+\kappa_2(G^\top W G),\quad
+\text{standardized residuals},\quad
+\text{(if robust) IRLS weights}.
+\]
+Accept a run if $\|r\|_{W}^2\approx m$ within tolerance and discrete energy checks
+(Ch.~12) show no growth beyond source work.
+
+\subsection{Falsifiable test plan}
+\begin{enumerate}
+\item \textbf{Noise scaling:} inject synthetic Gaussian noise with known variances;
+verify that the estimated $W$ makes $\|W^{1/2}r\|_2^2\approx m$.
+\item \textbf{Outliers:} corrupt a small fraction of entries; robust IRLS should
+recover with bounded influence and improved coverage.
+\item \textbf{Correlation:} introduce known local covariance; whitening should
+restore isotropic residuals (no spurious growth in $E_{\text{coh}}$).
+\item \textbf{Nonstationarity:} shorten/lengthen windows; detect bias/variance trade-offs
+and pick the smallest window that stabilizes diagnostics.
+\end{enumerate}
+
+\paragraph{Takeaway.}
+Local, dimensionless weighting via $W=\Sigma^{-1}$ (with robust/whitened variants)
+turns raw measurements into principled residuals for $A\varepsilon=\delta$.
+Calibrating $(\Omega_0,W_0)$ and enforcing falsifiable diagnostics keeps the data
+layer portable, K-free, and consistent with the Energy--Coherence Law.
+% ===================== End Chapter 15 =====================
+
+% ===================== Chapter 16 =====================
+\section{Numerical Experiments \& Benchmarks (Dimensionless Protocols)}
+
+\subsection{Principles and reporting}
+All experiments must be: (i) dimensionless (Option A, rad/s), (ii) K-free and
+local-only, (iii) falsifiable with pass/fail criteria, and (iv) reproducible.
+Each run reports
+\[
+E_{\text{coh}}(t),\quad V(t),\quad \rho_{\mathrm{lock}}(t),\quad \chi_{\mathrm{lock}}(t),
+\]
+plus solver diagnostics (Chapter~12) and data diagnostics (Chapters~13--15).
+
+\subsection{Common setup (domain, grids, time)}
+Let $\Omega=[0,L]^d$ with $d\in\{1,2\}$, periodic BC unless stated otherwise.
+Use $N$ grid points per direction ($\Delta x=L/N$) and total time $T$ with
+step $\Delta t$. For Option A:
+\[
+\text{report }\Omega_0\ (\text{rad/s}),\quad f_0=\Omega_0/(2\pi)\ \text{(Hz, if needed)},
+\]
+and $(\tau,c)$ dimensionless. Unless otherwise noted, initialize
+$\Psi(\mathbf x,0)$ as a band-limited packet and set $\partial_t\Psi(\mathbf x,0)=0$.
+
+\subsection{Canonical test problems}
+\paragraph{TP1: Homogeneous decay (no source).}
+Telegraph core without source: validate $\dot E_{\text{coh}}\le 0$ and numerical
+dispersion vs.\ $s_\pm(k)$ (Chapter~6). \emph{Pass} if energy decreases and
+mode decay matches the analytic rate within tolerance.
+
+\paragraph{TP2: Parametric drive with saturation.}
+Add $\mathsf f_{\text{drv}}=-\alpha_1\Psi-\alpha_3|\Psi|^2\Psi
++\beta_{\text{pm}}\cos(\Omega_0 t)$ and verify bounded $E_{\text{coh}}$
+with lock indices trending upward. \emph{Fail} if energy grows without bound.
+
+\paragraph{TP3: Phase-locked feedback.}
+Couple to a phase $\varphi$ (Chapter~8) with $\alpha_{\mathrm{cpl}}>0$ and
+measure $(\rho_{\mathrm{lock}},\chi_{\mathrm{lock}})$. \emph{Pass} if
+locking emerges without violating $\Re s<0$.
+
+\paragraph{TP4: Residual-aware correction.}
+Inject a small seed-aware feedback $-\gamma_r\mathcal M(\Psi)\,r$, $r:=A\varepsilon-\delta$;
+\emph{pass} if $V$ decreases on average while $E_{\text{coh}}$ remains nonincreasing.
+
+\paragraph{TP5: Data-rich inference.}
+Synthesize additional near-unity relations $G\varepsilon\simeq\delta$; solve by
+WLS/Tikhonov (Ch.~13) and verify coverage and discrepancy (Ch.~15).
+
+\subsection{Metrics and acceptance (pass/fail)}
+\paragraph{Energy--Coherence.}
+Compute
+\[
+E_{\text{coh}}(t)=\int_\Omega\!\Big(\tfrac12|\partial_t\Psi|^2+\tfrac{c^2}{2}|\nabla\Psi|^2+\Phi(\Psi)\Big)\,d\mathbf x,
+\]
+with $\Phi$ chosen per Chapter~10. Criterion: $E_{\text{coh}}(t_{n+1})\le E_{\text{coh}}(t_n)$
+up to source work under admissibility (Ch.~9).
+
+\paragraph{Residual consistency.}
+With $r:=G\varepsilon-\delta$ and $W$, track $V=\tfrac12\,r^\top W r$.
+Criterion: when in the locking regime (high $\rho_{\mathrm{lock}},\chi_{\mathrm{lock}}$),
+$\Delta V\le0$ on average over windows.
+
+\paragraph{Locking indices.}
+Compute (Chapter~8)
+\[
+\rho_{\mathrm{lock}}=\Big|\frac{1}{|\Omega|}\int_\Omega e^{i(\varphi-\theta(\Psi))}\,dx\Big|,\quad
+\chi_{\mathrm{lock}}=1-\frac{\langle(\partial_t\varphi-\Omega_0)^2\rangle}{\langle(\partial_t\varphi)^2\rangle+\epsilon}.
+\]
+Acceptance: monotone approach to a plateau in TP3/TP2 with admissible sources.
+
+\subsection{Grid/time convergence and dispersion checks}
+Run TP1 on grids $N=2^k N_0$, $k=0,1,2$, and time steps with fixed CFL or
+implicit stability. Measure $L^2$ error against either the spectral solution
+(Chapter~7) or a highly resolved reference; expect second-order slopes for
+CN/IMEX/Newmark($\beta=\tfrac14$). For dispersion, compare numerical amplification
+$g(\theta)$ with $e^{s_\pm(k)\Delta t}$; require
+$\Re(\log g)/\Delta t<0$ for all grid modes.
+
+\subsection{Ablations (governance-compliant)}
+\paragraph{A1: Remove saturation.}
+Set $\alpha_3=0$ in TP2; \emph{fail} expected via energy growth or loss of
+$\Re s<0$. Restore $\alpha_3>0$ and re-test (\emph{pass}).
+
+\paragraph{A2: Remove gradient in phase flow.}
+Set $\Gamma_\varphi=0$ in Chapter~8 coupling; locking fails (\emph{fail}).
+Restore $\Gamma_\varphi>0$ (\emph{pass}).
+
+\paragraph{A3: Remove flux.}
+Set $D=\eta=0$ in flux; observe degraded stability. Restore admissible flux
+and re-test.
+
+\subsection{Noise and robustness (data layer)}
+Generate $\eta$ with known local covariance $\Sigma$ and set $W=\Sigma^{-1}$.
+\emph{Pass} if $\|W^{1/2}r\|_2^2\approx m$ (windowed discrepancy) and sandwich
+covariance (Ch.~15) predicts empirical coverage. For outliers, run IRLS and
+report leverage and standardized residuals (Ch.~13).
+
+\subsection{Calibration to $\Omega_0$ and $W_0$}
+Report $\Omega_0$ (rad/s) and, if needed, $f_0=\Omega_0/(2\pi)$ for figures.
+Use the decomposition $W=W_0\widetilde W$, $\Lambda=\lambda_0\widetilde\Lambda$
+with dimensionless tilded objects; tune $W_0$ by discrepancy targets, and
+$\lambda_0$ by desired residual decay rate.
+
+\subsection{Benchmark suites (portable templates)}
+\paragraph{Suite S1 (linear restorative).}
+Parameters: $(\tau,c,\alpha_1)$; sources: restorative only; goals:
+energy decay, dispersion match, second-order convergence.
+
+\paragraph{Suite S2 (saturating with parametric drive).}
+Parameters: $(\tau,c,\alpha_1,\alpha_3,\beta_{\text{pm}})$; goals:
+bounded energy and controlled lock indices.
+
+\paragraph{Suite S3 (phase feedback).}
+Parameters: $(\tau,c,\kappa_\varphi,\Gamma_\varphi,\alpha_{\mathrm{cpl}})$;
+goals: emergence of locking and no violation of telegraph window.
+
+\paragraph{Suite S4 (data-rich inference).}
+Parameters: $(W_0,\widetilde W)$ and noise specs; goals: coverage,
+discrepancy, and conditioning diagnostics.
+
+\subsection{Reproducibility kit (deliverables)}
+Every benchmark release must include:
+\begin{enumerate}
+\item Versioned code and parameter files (text-readable).
+\item Seeds for noise and initial conditions.
+\item Grid/time information, BCs, and solver options (CN/IMEX/Newmark etc.).
+\item CSV/NPZ of $(E_{\text{coh}},V,\rho_{\mathrm{lock}},\chi_{\mathrm{lock}})$ time series.
+\item A short \emph{protocol sheet}: what constitutes pass/fail and why.
+\end{enumerate}
+
+\paragraph{Takeaway.}
+These dimensionless, K-free protocols make experiments portable across domains,
+falsifiable via explicit pass/fail checks, and reproducible by construction.
+They connect the telegraph PDE, residual inference, phase coupling, and data
+layers under a single reporting grammar.
+% ===================== End Chapter 16 =====================
+
+% ===================== Chapter 17 =====================
+\section{Case Study — Neural Dynamics (Mesoscopic Coherence)}
+
+\subsection{Anchors, scales, and interpretation}
+We adopt the Option~A normalization (rad/s; hats suppressed). The central cadence
+$\Omega_0$ is chosen from a narrowband neural rhythm (e.g., $\beta$ or $\gamma$).
+Report $f_0=\Omega_0/(2\pi)$ when Hz units are needed for figures. The coherence
+field $\Psi(\mathbf x,t)$ represents the local envelope (or analytic amplitude)
+of the narrowband population activity; the phase $\varphi(\mathbf x,t)\in\mathbb S^1$
+represents a local phase order parameter (Chapter~8).
+
+\subsection{Neural telegraph core with admissible sources}
+We use the telegraph-stable core (Chapter~6) with local source grammar (Chapter~9):
+\begin{equation}
+\tau\,\partial_t^2\Psi+\partial_t\Psi-c^2\nabla^2\Psi
+= -\alpha_1\Psi-\alpha_3|\Psi|^2\Psi
++ \beta_{\mathrm{pm}}\,\cos(\Omega_0 t+\phi_0)
++ \alpha_{\mathrm{cpl}}\sin\!\big(\varphi-\theta(\Psi)\big)
++ \xi(\mathbf x,t),
+\label{eq:neuro_telegraph}
+\end{equation}
+with $\tau,c,\alpha_1,\alpha_3,\beta_{\mathrm{pm}},\alpha_{\mathrm{cpl}}\ge 0$
+dimensionless and local-only (space--time dependent if desired). The stochastic
+term $\xi$ is zero-mean, white-in-time, locally parameterized (Chapter~11).
+
+\subsection{Phase coupling and gradient flow}
+The local phase subsystem (Chapter~8) reads
+\begin{align}
+\partial_t\varphi &=
+-\,\Gamma_\varphi\Big(-\kappa_\varphi\nabla^2\varphi
++\partial_\varphi U(\varphi;m_{\mathrm{eff}})
++ J(\Psi)\,\sin\!\big(\varphi-\theta(\Psi)\big)\Big)
++ \zeta(\mathbf x,t),
+\label{eq:neuro_phase}
+\end{align}
+with $\Gamma_\varphi,\kappa_\varphi>0$, periodic potential $U$, and local gain
+$J(\Psi)\ge0$. Noise $\zeta$ is zero-mean, causal, and local. The pair
+\eqref{eq:neuro_telegraph}–\eqref{eq:neuro_phase} is well-posed under the rules
+of Chapter~11.
+
+\subsection{Observables and measurement map}
+Let $\mathcal O[\Psi]$ denote an observable computed locally from the simulated
+$\Psi$ that corresponds to an experimental measurement (e.g., instantaneous
+power or Hilbert-envelope magnitude). Define the local measurement model
+\begin{equation}
+\delta=\mathcal M\!\big(\mathcal O[\Psi]\big)+\eta,\qquad \mathbb E[\eta]=0,
+\label{eq:neuro_measure}
+\end{equation}
+with $\eta$ local noise. The residual inference follows $A\varepsilon=\delta$
+(Chapter~4) or $G\varepsilon\simeq\delta$ (Chapter~13), and $W$ is built from
+local noise estimates (Chapter~15). No circularity: $\delta$ depends on $\Psi$
+only; $\varepsilon$ is inferred from $\delta$ only.
+
+\subsection{Energy--coherence law and locking indices}
+Define the coherence energy (Chapter~10)
+\[
+\mathcal E_{\text{coh}}(\Psi)=\tfrac12|\partial_t\Psi|^2+\tfrac{c^2}{2}|\nabla\Psi|^2
++\tfrac{\alpha_1}{2}|\Psi|^2+\tfrac{\alpha_3}{4}|\Psi|^4,\quad
+E_{\text{coh}}(t)=\int_\Omega \mathcal E_{\text{coh}}\,dx.
+\]
+Locking indices (Chapter~8) quantify neural phase/frequency alignment to $\Omega_0$:
+\[
+\rho_{\mathrm{lock}}(t)=\Big|\tfrac{1}{|\Omega|}\int_\Omega e^{i(\varphi-\theta(\Psi))}\,dx\Big|,
+\qquad
+\chi_{\mathrm{lock}}(t)=1-\frac{\langle(\partial_t\varphi-\Omega_0)^2\rangle}{\langle(\partial_t\varphi)^2\rangle+\epsilon}.
+\]
+Admissible sources guarantee $\dot E_{\text{coh}}\le 0$ (modulo source work),
+and in the locking regime we expect a decreasing residual energy
+$V=\tfrac12(A\varepsilon-\delta)^\top W (A\varepsilon-\delta)$ on average.
+
+\subsection{Parameter regimes (dimensionless, local)}
+Select regimes representative of mesoscopic rhythms:
+\begin{itemize}
+\item \textbf{Restorative/saturating:} $\alpha_1\in[0.05,0.5]$, $\alpha_3\in[0.1,1]$.
+\item \textbf{Propagation:} $c\in[0.3,1.2]$ (group velocity scale), $\tau\in[0.05,0.5]$.
+\item \textbf{Parametric drive:} $\beta_{\mathrm{pm}}\in[0,0.5]$; phase offset $\phi_0\in[0,2\pi)$.
+\item \textbf{Phase coupling:} $\Gamma_\varphi\in[0.1,1]$, $\kappa_\varphi\in[0.01,0.2]$, $J(\Psi)=J_0\,\min\{1,|\Psi|\}$ with $J_0\in[0,1]$, $\alpha_{\mathrm{cpl}}\in[0,1]$.
+\end{itemize}
+All can vary slowly in space to encode cortical heterogeneity while remaining local-only.
+
+\subsection{Neural benchmarks (falsifiable)}
+We adopt the dimensionless protocols of Chapter~16 with neural specializations.
+\paragraph{NB1: Homogeneous decay.}
+Set $\beta_{\mathrm{pm}}=\alpha_{\mathrm{cpl}}=0$, random band-limited initial
+$\Psi$, periodic BC. \emph{Pass:} $E_{\text{coh}}$ decreases; modal decay matches
+telegraph dispersion.
+
+\paragraph{NB2: Locked response under admissible drive.}
+Enable a small parametric drive ($\beta_{\mathrm{pm}}>0$) with saturation
+($\alpha_3>0$). \emph{Pass:} bounded $E_{\text{coh}}$ and increasing
+$(\rho_{\mathrm{lock}},\chi_{\mathrm{lock}})$; \emph{fail:} growth due to violating
+small-gain bounds.
+
+\paragraph{NB3: Phase feedback.}
+Activate \eqref{eq:neuro_phase} and $\alpha_{\mathrm{cpl}}>0$; \emph{pass:}
+emergent locking without violating $\Re s<0$; \emph{ablation fail:} set
+$\Gamma_\varphi=0$ and observe loss of locking.
+
+\paragraph{NB4: Residual consistency.}
+Construct $\delta$ via \eqref{eq:neuro_measure}; solve $A\varepsilon=\delta$ and
+track $V$. \emph{Pass:} during high locking, $V$ decreases on average; \emph{fail:}
+miscalibrated sources produce sustained $V$ growth.
+
+\subsection{Measurement, weights, and diagnostics}
+Choose $\mathcal O[\Psi]$ as a local envelope or bandpower; define
+$\delta=\mathcal M(\mathcal O[\Psi])+\eta$ with locally estimated covariance
+$\Sigma$ and $W=\Sigma^{-1}$ (Chapter~15). Diagnostics include
+$\|W^{1/2}(G\varepsilon-\delta)\|_2^2$, $\sigma_{\min}(G^\top W G)$, and
+discrete energy monitors (Chapter~12).
+
+\subsection{Boundary conditions and heterogeneity}
+Use periodic or Neumann BCs to emulate contiguous cortex patches. Spatially
+varying $\alpha_1,\alpha_3,J_0$ encode heterogeneous excitability/connectivity.
+All variations remain local; no nonlocal kernels are introduced.
+
+\subsection{Representative outcomes (qualitative)}
+\begin{itemize}
+\item \textbf{Stable coherence:} With admissible parameters, $\Psi$ exhibits
+bounded envelopes and traveling/standing waves with $\Re s<0$.
+\item \textbf{Locking:} Under moderate drive or feedback, $\rho_{\mathrm{lock}}$
+and $\chi_{\mathrm{lock}}$ rise towards a plateau near the cadence $\Omega_0$.
+\item \textbf{Consistency:} In locked regimes, the residual energy $V$ declines
+on average, aligning field-level coherence with seed-level consistency.
+\end{itemize}
+
+\paragraph{Takeaway.}
+The neural case realizes a dimensionless, local-only, falsifiable link from
+mesoscopic field dynamics to measurements and residual inference. Telegraph
+stability, energy--coherence compatibility, and phase-lock emergence to $\Omega_0$
+manifest without invoking any nonlocal knowledge.
+% ===================== End Chapter 17 =====================
+
+% ===================== Chapter 18 =====================
+\section{Case Study — Diffusion--Reaction / Materials Systems}
+
+\subsection{Anchors, interpretation, and scope}
+We adopt the Option~A normalization (rad/s; hats suppressed). The coherence field
+$\Psi(\mathbf x,t)$ represents a smoothed order parameter (e.g., phase fraction,
+normalized composition, or an effective microstructural envelope). The central
+cadence $\Omega_0$ plays the role of a reference timescale associated with
+microscopic rearrangements; report $f_0=\Omega_0/(2\pi)$ in figures when Hz is
+useful for comparison.
+
+\subsection{Telegraph-stable core with local reaction/transport sources}
+We use the telegraph equation (Chapter~6) with a dimensionless, local source
+grammar (Chapter~9):
+\begin{equation}
+\tau\,\partial_t^2\Psi + \partial_t\Psi - c^2\nabla^2\Psi
+= -\alpha_1\Psi - \alpha_3|\Psi|^2\Psi
++ \underbrace{\mathcal R(\Psi;\theta)}_{\text{local reaction}}
++ \underbrace{\nabla\!\cdot\!\big(D(\Psi)\nabla\Psi + \eta(\Psi)\nabla\partial_t\Psi\big)}_{\text{flux}}
++ \xi(\mathbf x,t).
+\label{eq:dr_telegraph}
+\end{equation}
+Here $\alpha_1,\alpha_3\ge0$ encode restorative/saturating effects; $D(\Psi)\ge0$
+and $\eta(\Psi)\ge0$ are local transport moduli; $\mathcal R(\Psi;\theta)$ is a
+local reaction term parameterized by $\theta$ (e.g., driving force, temperature).
+The noise $\xi$ is zero-mean, causal, and local (Chapter~11).
+
+\paragraph{Reaction templates (local-only).}
+\begin{align}
+\text{Logistic/precipitation: }\quad
+&\mathcal R(\Psi;\theta)=k(\theta)\,\Psi(1-\Psi),\label{eq:logistic}\\
+\text{Allen--Cahn-like (relaxation to wells): }\quad
+&\mathcal R(\Psi;\theta)=-\beta(\theta)\,\Phi'(\Psi),
+\quad \Phi(\Psi)=\tfrac{\alpha_1}{2}\Psi^2+\tfrac{\alpha_3}{4}\Psi^4.
+\label{eq:allen_cahn_like}
+\end{align}
+Both are pointwise, Lipschitz on bounded sets, and compatible with the
+Energy--Coherence budget (Chapter~10).
+
+\subsection{Energy--coherence and admissibility}
+Choose
+\[
+\mathcal E_{\text{coh}}(\Psi)=\tfrac12|\partial_t\Psi|^2+\tfrac{c^2}{2}|\nabla\Psi|^2+\Phi(\Psi),
+\quad
+\Phi(\Psi)=\tfrac{\alpha_1}{2}\Psi^2+\tfrac{\alpha_3}{4}\Psi^4.
+\]
+Under the flux form in \eqref{eq:dr_telegraph} with $D,\eta\ge0$ and reaction
+templates \eqref{eq:logistic}--\eqref{eq:allen_cahn_like} (with saturating
+$\Phi$), the Energy--Coherence budget satisfies $\dot E_{\text{coh}}\le0$ modulo
+controlled source work (Chapter~10). The telegraph window $\Re s<0$ is preserved
+provided small-gain/saturation bounds hold (Chapter~9).
+
+\subsection{Boundary conditions and materials settings}
+Take $\Omega\subset\mathbb R^d$ ($d\in\{1,2,3\}$). Typical BCs:
+\begin{itemize}
+\item \textbf{Periodic} for bulk periodic microstructures.
+\item \textbf{Neumann} $\partial_n\Psi=0$ for symmetry or no-flux boundaries.
+\item \textbf{Dirichlet} $\Psi=\Psi_{\mathrm{bc}}$ for imposed phase fraction on surfaces.
+\end{itemize}
+Well-posedness and regularity follow Chapter~11 under the local Lipschitz and
+passivity assumptions.
+
+\subsection{Observables, measurement map, and weights}
+Define a local observable $\mathcal O[\Psi]$ matching experiment/simulation
+(e.g., normalized XRD peak envelope, optical/IR transmittance proxy, impedance
+magnitude). The measurement model is
+\[
+\delta=\mathcal M\big(\mathcal O[\Psi]\big)+\eta,\qquad \mathbb E[\eta]=0,
+\]
+with local noise $\eta$. Build $W=\Sigma^{-1}$ from local covariance estimates
+(Chapter~15). Inference uses $A\varepsilon=\delta$ (Chapter~4) or its WLS/Tikhonov
+extension (Chapters~13--14). No circularity: $\delta$ depends on $\Psi$ only.
+
+\subsection{Parameter regimes (dimensionless, local)}
+Illustrative dimensionless ranges:
+\[
+\tau\in[0.02,0.5],\quad c\in[0.2,1.0],\quad
+\alpha_1\in[0,0.5],\quad \alpha_3\in[0.1,1.5],\quad
+k(\theta),\beta(\theta)\in[0,1],
+\]
+and transport moduli $D(\Psi)\in[D_{\min},D_{\max}]$, $\eta(\Psi)\in[0,\eta_{\max}]$ with
+$0\le D_{\min}\le D_{\max}=O(1)$, $0\le\eta_{\max}=O(1)$. All quantities may vary
+slowly in space or time to encode heterogeneity, remaining local-only.
+
+\subsection{Benchmarks (falsifiable, materials-focused)}
+We reuse Chapter~16 protocols with the following specializations.
+
+\paragraph{MB1: Homogeneous relaxation (no reaction/drive).}
+Set $\mathcal R\equiv0$, $D,\eta$ constant. \emph{Pass:} monotone
+$E_{\text{coh}}$ decrease and dispersion consistent with telegraph roots.
+
+\paragraph{MB2: Reaction-controlled front.}
+Activate $\mathcal R$ (e.g., logistic) with small $D$; observe sigmoidal growth
+of the mean $\langle\Psi\rangle$ with bounded energy. \emph{Fail:} loss of
+$\Re s<0$ if saturation is removed.
+
+\paragraph{MB3: Diffusion-controlled smoothing.}
+Set $\mathcal R\equiv0$, moderate $D(\Psi)$; verify front smoothing and energy
+decay without overshoot; boundary conditions influence the front in expected ways.
+
+\paragraph{MB4: Residual consistency.}
+Construct $\delta$ from $\mathcal O[\Psi]$; solve $A\varepsilon=\delta$ and track
+$V=\tfrac12(A\varepsilon-\delta)^\top W(A\varepsilon-\delta)$. During steady
+front propagation (near a locked regime), $V$ should decrease on average.
+
+\subsection{Numerical notes (discretization and stability)}
+Spatially discretize with centered differences or finite elements; time integration
+via CN/IMEX/Newmark (Chapter~12). Prefer implicit treatment for the diffusion
+operator to avoid restrictive CFL, keeping sources explicit (or IMEX). Monitor
+the discrete energy to enforce the Energy--Coherence law numerically.
+
+\subsection{Representative outcomes (qualitative)}
+\begin{itemize}
+\item \textbf{Stable front propagation:} bounded $E_{\text{coh}}$, fronts with
+finite width set by $c,\tau$ and reaction/transport parameters.
+\item \textbf{Microstructure smoothing:} diffusion-dominated runs show curvature
+driven smoothing with monotone energy decrease.
+\item \textbf{Consistency with measurements:} when observables lock to $\Omega_0$
+(e.g., cyclic loading or periodic driving), residual energy $V$ decreases on average.
+\end{itemize}
+
+\paragraph{Takeaway.}
+The diffusion--reaction case demonstrates a K-free, local-only bridge from
+telegraph-stable order-parameter dynamics to measurement-linked residual
+inference, with explicit, falsifiable tests that preserve $\Re s<0$ and
+the Energy--Coherence budget across materials scenarios.
+% ===================== End Chapter 18 =====================
+
+% ===================== Chapter 19 =====================
+\section{Case Study — Fluids/Plasma-like Toy Model}
+
+\subsection{Anchors, interpretation, and scope}
+We adopt Option~A (rad/s; hats suppressed). Interpret $\Psi(\mathbf x,t)$ as a
+dimensionless scalar amplitude tracing compressive energy packets (e.g., an
+acoustic or magnetoacoustic envelope). The central cadence is $\Omega_0$; report
+$f_0=\Omega_0/(2\pi)$ only for figures. All operators and sources remain local
+and K-free.
+
+\subsection{Telegraph--advection core with admissible sources}
+Extend the telegraph-stable core (Chapter~6) by a local advection drift
+$\mathbf u(\mathbf x,t)$:
+\begin{equation}
+\tau\,\partial_t^2\Psi+\partial_t\Psi - c^2\nabla^2\Psi
+\;+\; \mathbf u(\mathbf x,t)\!\cdot\!\nabla\Psi
+\;=\; -\alpha_1\Psi-\alpha_3|\Psi|^2\Psi
+\;+\; \nabla\!\cdot\!\big(D(\Psi)\nabla\Psi\big)
+\;+\; \xi(\mathbf x,t).
+\label{eq:plasma_tele_adv}
+\end{equation}
+Here $c,\tau>0$; $\alpha_1,\alpha_3\ge0$ are restorative/saturating gains;
+$D(\Psi)\ge0$ is a local diffusion modulus; and $\xi$ is causal, zero-mean,
+local noise (Chapter~11). The drift $\mathbf u$ is prescribed or obtained from a
+separate local rule (e.g., a filtered background flow) subject to boundedness.
+
+\paragraph{Local admissibility.}
+Assume $\mathbf u\in L^\infty$ and Lipschitz on bounded sets, with
+$\|\mathbf u\|_\infty\le u_{\max}=O(1)$; $D(\Psi)\in[0,D_{\max}]$, smooth;
+$\alpha_3>0$ when parametric drives are present.
+
+\subsection{Energy--coherence and advection balance}
+Define the coherence density with a drift contribution handled by
+skew-symmetric work:
+\[
+\mathcal E_{\text{coh}}(\Psi)=\tfrac12|\partial_t\Psi|^2+\tfrac{c^2}{2}|\nabla\Psi|^2
++\tfrac{\alpha_1}{2}|\Psi|^2+\tfrac{\alpha_3}{4}|\Psi|^4,
+\quad E_{\text{coh}}(t)=\int_\Omega \mathcal E_{\text{coh}}\,d\mathbf x .
+\]
+Multiplying \eqref{eq:plasma_tele_adv} by $\partial_t\Psi$ and integrating over
+$\Omega$ with periodic or appropriate boundary conditions yields
+\[
+\dot E_{\text{coh}}(t)
+= -\int_\Omega \big(\tau\,|\partial_t^2\Psi|^2+|\partial_t\Psi|^2\big)\,dx
+-\int_\Omega \nabla\partial_t\Psi\cdot D(\Psi)\nabla\Psi\,dx
++ \underbrace{\int_\Omega \partial_t\Psi\,(\mathbf u\!\cdot\!\nabla\Psi)\,dx}_{\text{skew (transport)}} 
++ \int_\Omega \partial_t\Psi\,\xi\,dx .
+\]
+Under periodic/Neumann boundaries, the advection term is skew and integrates to
+a boundary flux; thus it does not create energy. With $D(\Psi)\ge0$ the flux is
+dissipative. Hence the Energy--Coherence budget (Chapter~10) persists.
+
+\subsection{Measurement map and residual link}
+Choose a local observable $\mathcal O[\Psi]$ relevant to fluids/plasma
+(e.g., band-limited pressure envelope, integrated emission proxy, or synthetic
+line-of-sight signal). The measurement is
+\begin{equation}
+\delta=\mathcal M\big(\mathcal O[\Psi]\big)+\eta,\qquad \mathbb E[\eta]=0.
+\label{eq:plasma_meas}
+\end{equation}
+Build the weight $W$ from local noise statistics (Chapter~15); infer $\varepsilon$
+via $A\varepsilon=\delta$ or $G\varepsilon\simeq\delta$ (Chapters~4 and 13).
+Non-circularity is preserved: $\delta$ depends on $\Psi$ only.
+
+\subsection{Parameter regimes (dimensionless, local)}
+Illustrative ranges:
+\[
+\tau\in[0.02,0.5],\quad c\in[0.3,1.5],\quad
+\alpha_1\in[0,0.5],\ \alpha_3\in[0.1,1.5],\quad
+D(\Psi)\in[0,D_{\max}],\ D_{\max}=O(1),\quad
+\|\mathbf u\|_\infty\le u_{\max}=O(1).
+\]
+All quantities may vary slowly in space–time while remaining local-only.
+
+\subsection{Boundary conditions}
+\begin{itemize}
+\item \textbf{Periodic}: energy-conserving for the drift term; convenient for FFT
+diagnostics.
+\item \textbf{Neumann}: reflect advection; no normal flux for diffusion.
+\item \textbf{Dirichlet}: inflow/outflow walls modeled by prescribed $\Psi$ on
+the boundary; ensure compatibility at $t=0$.
+\end{itemize}
+Well-posedness follows Chapter~11 under Lipschitz and boundedness hypotheses.
+
+\subsection{Benchmarks (falsifiable, fluids/plasma-focused)}
+\paragraph{FB1: Advected decay (no source).}
+Set $\alpha_1=\alpha_3=0$, $D>0$, and a steady $\mathbf u$. \emph{Pass:}
+$E_{\text{coh}}$ decreases and the packet translates without growth.
+
+\paragraph{FB2: Saturated wave packet.}
+Turn on $\alpha_1>0$, $\alpha_3>0$ with moderate drift; verify bounded envelopes,
+telegraph dispersion, and no energy injection by advection.
+
+\paragraph{FB3: Sheared drift (heterogeneous $\mathbf u$).}
+Specify $\mathbf u(\mathbf x)= (s\,y,0)$ (2D) with small shear $s$; \emph{pass:}
+no violation of $\Re s<0$; discrete energy remains nonincreasing modulo work.
+
+\paragraph{FB4: Residual consistency under advection.}
+Construct $\delta$ via \eqref{eq:plasma_meas}; solve $A\varepsilon=\delta$; \emph{pass:}
+during advected steady regimes, $V=\tfrac12(A\varepsilon-\delta)^\top W (A\varepsilon-\delta)$
+decreases on average.
+
+\subsection{Numerical notes (CN/IMEX with drift)}
+Discretize advection by centered differencing with a skew-symmetric form or by
+upwind (for robustness). Use CN/IMEX/Newmark (Chapter~12) with the diffusion
+term implicit and advection/source explicit (or extrapolated). Monitor the
+discrete energy; enforce small-gain/saturation to prevent growth.
+
+\subsection{Representative outcomes (qualitative)}
+\begin{itemize}
+\item \textbf{Transported coherence:} packets advect with $\mathbf u$ while
+damping via telegraph and diffusion; energy decays monotonically.
+\item \textbf{Saturated stability:} with $\alpha_3>0$, parametric or restorative
+drives do not cause runaway; spectra remain in the $\Re s<0$ window.
+\item \textbf{Residual alignment:} measurement-consistent runs show decreasing $V$
+when the field is in a drift-locked regime with stable envelopes.
+\end{itemize}
+
+\paragraph{Takeaway.}
+Adding a local advection drift preserves the dimensionless, K-free, telegraph
+stability of the field while enabling transport-like behaviors relevant to
+fluids/plasma surrogates. Energy–Coherence, admissibility, and residual
+consistency remain falsifiable and portable.
+% ===================== End Chapter 19 =====================
+
+% ===================== Chapter 20 =====================
+\section{Cross-Domain Synthesis: Parameter Transfer and Scaling Rules}
+
+\subsection{Similarity classes (Option A, rad/s)}
+Two configurations $\mathcal P$ and $\mathcal P'$ (possibly in different
+domains) are in the same similarity class if, after a local rescaling by a factor
+$\lambda>0$,
+\begin{equation}
+(\kappa,\omega,b,\rho)\ \mapsto\ (\lambda^{2}\kappa,\ \lambda\,\omega,\
+\lambda\,b,\ \lambda^{-1}\rho),
+\qquad
+(\tau,c,\alpha_1,\alpha_3)\ \mapsto\ (\lambda^{-1}\tau,\ \lambda\,c,\
+\alpha_1,\ \alpha_3),
+\label{eq:group_xfer}
+\end{equation}
+their \emph{invariants} match:
+\begin{equation}
+\Pi_1=\frac{\kappa}{\omega^2},\quad
+\Pi_2=\frac{b}{\omega},\quad
+\Pi_3=\omega\rho,
+\qquad
+\Theta_1:=c^2\tau,\quad
+\Theta_2:=\frac{\alpha_1}{c^2},\quad
+\Theta_3:=\frac{\alpha_3}{c^2}.
+\label{eq:invariants}
+\end{equation}
+The \(\Pi\)'s arise from the seed algebra (Ch.~3--4); the \(\Theta\)'s from the
+telegraph core (Ch.~6). Matching \((\Pi,\Theta)\) yields identical local
+dispersion and near-unity algebra after rescaling time/space units.
+
+\subsection{Transfer of the telegraph core}
+Let $\Psi$ solve (Ch.~6) with parameters $(\tau,c,\alpha_1,\alpha_3)$ and valid
+sources. Under \eqref{eq:group_xfer}, the rescaled field
+\[
+\Psi'(\mathbf x,t):=\Psi(\lambda^{-1}\mathbf x,\lambda\,t)
+\]
+satisfies a telegraph equation with $(\tau',c',\alpha_1',\alpha_3')$
+given by \eqref{eq:group_xfer}. Its dispersion roots obey
+\[
+s'_\pm(k)=\lambda\,s_\pm(\lambda^{-1}k),
+\]
+so $\Re s'<0$ iff $\Re s<0$. Hence the \emph{telegraph stability window}
+and the Energy--Coherence budget are invariant under transfer.
+
+\subsection{Source grammar portability (local-only)}
+Each source block transfers with a scale weight determined by its differential
+order:
+\begin{equation}
+\nabla\cdot \big(D(\Psi)\nabla\Psi\big)\ \leadsto\ \lambda^{2}\,(\cdot),\qquad
+\partial_t\Psi\ \leadsto\ \lambda\,(\cdot),\qquad
+\partial_t^2\Psi,\ \nabla^2\Psi\ \leadsto\ \lambda^{2}\,(\cdot).
+\label{eq:weights}
+\end{equation}
+To preserve admissibility (Ch.~9) after transfer, scale any \emph{active} drive
+gain \(\beta_{\mathrm{pm}}\) so that
+\[
+\frac{\beta_{\mathrm{pm}}}{c^2}\ \text{is invariant},\qquad
+\alpha_3>0\ \text{(kept)}.
+\]
+Thus small-gain/saturation bounds and $\Re s<0$ remain intact.
+
+\subsection{Residual layer transfer}
+The seed closure is algebraic: $A\varepsilon=\delta$ (Ch.~4). Under
+\eqref{eq:group_xfer}, the near-unity algebra in hats is unchanged, hence
+\begin{equation}
+A' = A,\qquad \varepsilon'=\varepsilon,\qquad
+\delta'=\delta,\qquad
+V'=\tfrac12\,\delta^\top W'\delta,
+\label{eq:residual_xfer}
+\end{equation}
+with $W'=W_0'\,\widetilde W$ and the same \(\widetilde W\) (dimensionless). Only
+the scalar anchors $(W_0,\lambda_0)$ change,
+\[
+W'=W_0'\,\widetilde W,\qquad \Lambda'=\lambda_0'\,\widetilde\Lambda,
+\]
+to keep the same discrepancy targets and decay rates (Ch.~10).
+
+\subsection{Phase coupling transfer}
+For the phase energy (Ch.~8), set
+\[
+\kappa_\varphi'=\lambda^{0}\kappa_\varphi,\quad
+\Gamma_\varphi'=\lambda^{1}\Gamma_\varphi,\quad
+J'(\Psi')=J(\Psi),\quad
+\theta(\Psi')=\theta(\Psi),
+\]
+so that the phase Lyapunov decrease is preserved under time rescaling $t\mapsto \lambda t$.
+
+\subsection{Domain crosswalk (neural, materials, fluids-like)}
+A compact mapping among the three case studies:
+
+\begin{center}
+\begin{tabular}{lccc}
+\toprule
+Quantity & Neural & Materials (DR) & Fluids-like \\
+\midrule
+$\Psi$ & band-limited envelope & phase-fraction envelope & compressive amplitude \\
+$\mathsf f_{\text{drv}}$ & parametric drive & local reaction $\mathcal R(\Psi)$ & restorative/saturation \\
+Flux & $D\nabla\Psi$ (diffusive) & $D\nabla\Psi+\eta\nabla\partial_t\Psi$ & $D\nabla\Psi$ \\
+Advection & -- & -- & $\mathbf u\cdot\nabla\Psi$ \\
+Locking metric & $(\rho_{\text{lock}},\chi_{\text{lock}})$ & residual consistency during cycles & drift-locked residual consistency \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Under \eqref{eq:group_xfer}--\eqref{eq:weights}, these ingredients match
+one-to-one after unit rescaling and gain renormalization.
+
+\subsection{Renormalization-style tuning (local recipe)}
+Given a reference configuration $\mathcal P=(\tau,c,\alpha_1,\alpha_3,\beta_{\mathrm{pm}})$
+and a target configuration $\mathcal P'$ with the same invariants \eqref{eq:invariants}:
+\begin{enumerate}
+\item Pick $\lambda=\dfrac{c'}{c}$ (space/time speed ratio).
+\item Set $\tau'=\lambda^{-1}\tau$ and keep $\alpha_1'=\alpha_1$, $\alpha_3'=\alpha_3$.
+\item Scale active drive $\beta_{\mathrm{pm}}'=\big(\tfrac{c'}{c}\big)^{2}\beta_{\mathrm{pm}}$
+to keep $\beta_{\mathrm{pm}}/c^2$ invariant.
+\item Keep $A$, $\widetilde W$, $\widetilde\Lambda$ unchanged; tune $(W_0',\lambda_0')$
+by discrepancy and decay-rate targets (Ch.~10).
+\end{enumerate}
+This preserves dispersion, Lyapunov monotonicity, and residual consistency.
+
+\subsection{Falsifiable transfer tests}
+\begin{enumerate}
+\item \textbf{Dispersion preservation:} compare $s_\pm(k)$ and $s'_\pm(k)$ via
+the scaling rule $s'_\pm(k)=\lambda\,s_\pm(\lambda^{-1}k)$; require matching
+real parts (stability) and scaled imaginary parts (oscillation).
+\item \textbf{Energy budget:} verify $E_{\text{coh}}'(t)$ is nonincreasing modulo
+source work, mirroring $E_{\text{coh}}(t)$ after rescaling time by $\lambda$.
+\item \textbf{Residual statistics:} show that the whitened residual norm
+$\|W^{1/2}(G\varepsilon-\delta)\|_2$ has the same distribution before/after transfer,
+up to the scalar anchors $(W_0,\lambda_0)$.
+\item \textbf{Locking behavior:} when applicable, demonstrate that peak values
+and settling times of $(\rho_{\mathrm{lock}},\chi_{\mathrm{lock}})$ scale by
+the predicted factor $\lambda$.
+\end{enumerate}
+
+\subsection{What does \emph{not} transfer (guardrails)}
+The cross-domain map is \emph{local-only}. Nonlocal couplings, global constraints,
+or history-dependent kernels (ruled out by the governance) are \emph{not}
+transported by \eqref{eq:group_xfer}. Any empirical improvement from such terms
+must be treated as a separate, explicitly declared model layer.
+
+\paragraph{Takeaway.}
+Similarity via \((\Pi,\Theta)\), combined with the rescaling
+\eqref{eq:group_xfer} and the local source grammar, yields a portable and
+falsifiable map between domains. It preserves the telegraph stability window,
+Energy--Coherence budget, and residual-layer statistics while keeping the entire
+construction dimensionless, K-free, and local-only.
+% ===================== End Chapter 20 =====================
+
+% ===================== Chapter 21 =====================
+\section{Beyond Log-Linear: Second-Order Corrections and Validity Windows}
+
+\subsection{Motivation and setting}
+The hat-frame mother ratios (Ch.~4) are written as near-one quantities
+$\Pi_i(\varepsilon)=1+\delta_i(\varepsilon)$ with $\|\varepsilon\|\ll1$.
+Log-linearization yields the seed system $A\varepsilon=\delta$.
+To quantify departures from strict linearity and extend the workable range of
+$\|\varepsilon\|$, we keep quadratic terms from $\log(1+x)=x-\tfrac12x^2+O(x^3)$.
+
+\subsection{Quadratic expansion of the mother map}
+Let $\delta(\varepsilon)$ denote the vector whose components are the log-residuals:
+$\delta_i(\varepsilon)=\log \Pi_i(\varepsilon)$.
+A second-order Taylor expansion at $\varepsilon=0$ gives
+\begin{equation}
+\delta(\varepsilon)
+= A\,\varepsilon \;+\; \tfrac12 \,\mathcal B[\varepsilon,\varepsilon] \;+\; R_3(\varepsilon),
+\qquad \|R_3(\varepsilon)\|=O(\|\varepsilon\|^3),
+\label{eq:quad_expansion}
+\end{equation}
+where $\mathcal B:\mathbb R^4\times\mathbb R^4\to\mathbb R^m$ is a symmetric
+bilinear form that collects second derivatives at the unity state.
+Equivalently, in components
+\begin{equation}
+\delta_i(\varepsilon)=\sum_{a} A_{ia}\,\varepsilon_a
++ \tfrac12\sum_{a,b} H^{(i)}_{ab}\,\varepsilon_a\varepsilon_b
++ O(\|\varepsilon\|^3),\qquad H^{(i)}_{ab}=H^{(i)}_{ba},
+\label{eq:comp_form}
+\end{equation}
+and $\mathcal B[\varepsilon,\varepsilon]$ has entries
+$[\mathcal B[\varepsilon,\varepsilon]]_i=\sum_{a,b}H^{(i)}_{ab}\varepsilon_a\varepsilon_b$.
+
+\subsection{Quadratic residual model and inversion}
+The second-order residual can be modeled as
+\begin{equation}
+\delta \;\approx\; A\,\varepsilon + \tfrac12\,\mathcal B[\varepsilon,\varepsilon],
+\label{eq:quad_model}
+\end{equation}
+with two local inversion strategies:
+
+\paragraph{(i) Corrected one-shot (small curvature).}
+Solve the linear seed $\varepsilon^{(0)}=A^{-1}\delta$, then apply a Newton-like correction:
+\begin{align}
+\delta_{\text{curv}}^{(0)} &:= \tfrac12\,\mathcal B[\varepsilon^{(0)},\varepsilon^{(0)}],\nonumber\\
+\varepsilon^{(1)} &:= A^{-1}\!\left(\delta-\delta_{\text{curv}}^{(0)}\right),
+\label{eq:oneshot_correction}
+\end{align}
+repeat once if needed. This is accurate when $\|\mathcal B\|\,\|\varepsilon^{(0)}\|\ll\|A\|$.
+
+\paragraph{(ii) Gauss--Newton on the quadratic map.}
+Define the nonlinear residual
+\[
+r(\varepsilon):=A\varepsilon+\tfrac12\,\mathcal B[\varepsilon,\varepsilon]-\delta.
+\]
+Linearize at $\varepsilon^k$ using the Jacobian
+\[
+J(\varepsilon^k)=A+\mathcal B[\varepsilon^k,\cdot],
+\]
+and compute a step $p^k$ from $J(\varepsilon^k)^\top W J(\varepsilon^k)\,p^k
+=-J(\varepsilon^k)^\top W r(\varepsilon^k)$ (WLS metric $W\succeq0$), then set
+$\varepsilon^{k+1}=\varepsilon^k+p^k$ with trust-region or line-search safeguards.
+
+\subsection{Bounding the remainder and defining validity windows}
+Assume there exists $M_3>0$ such that $\|R_3(\varepsilon)\|\le \tfrac{M_3}{6}\|\varepsilon\|^3$
+in a neighborhood of the origin, and let $\|\mathcal B\|$ denote the operator norm
+of the bilinear form in \eqref{eq:quad_expansion}.
+Then for the linear seed estimator $\varepsilon_{\text{lin}}:=A^{-1}\delta$
+with exact data:
+\begin{equation}
+\|\varepsilon-\varepsilon_{\text{lin}}\|
+\;\le\; \tfrac12\,\|A^{-1}\|\,\|\mathcal B\|\,\|\varepsilon\|^2
+\;+\; \|A^{-1}\|\,\|R_3(\varepsilon)\|.
+\label{eq:error_bound_linear}
+\end{equation}
+A practical \emph{validity radius} $r_\star$ for the linear model is the largest
+$r$ such that
+\begin{equation}
+\tfrac12\,\|A^{-1}\|\,\|\mathcal B\|\,r \;+\; \tfrac{M_3}{6}\|A^{-1}\|\,r^2
+\;\le\; \eta,
+\label{eq:radius_condition}
+\end{equation}
+for a chosen tolerance $\eta\in(0,1)$ on the relative error
+$\|\varepsilon-\varepsilon_{\text{lin}}\|/\max\{1,\|\varepsilon\|\}$.
+Inside $B_{r_\star}(0)$, the linear approximation is deemed sufficient.
+
+\subsection{Noise, weighting, and robustness}
+With noisy $\delta$ and weight $W=\Sigma^{-1}$ (Ch.~15), define the weighted
+quadratic loss
+\[
+V_2(\varepsilon)=\tfrac12\|A\varepsilon+\tfrac12 \mathcal B[\varepsilon,\varepsilon]-\delta\|_W^2.
+\]
+Gauss--Newton updates use $J(\varepsilon)=A+\mathcal B[\varepsilon,\cdot]$ as above.
+If outliers/heavy tails are present, embed $V_2$ in IRLS (Ch.~15) by replacing $W$
+with iteration-dependent diagonal weights; all operations remain local-only.
+
+\subsection{Trust regions and acceptance rules}
+Use a trust-region subproblem for $p$:
+\[
+\min_{\|p\|\le \Delta}\ \tfrac12\|Jp+r\|_W^2,
+\]
+update the radius $\Delta$ via the ratio of actual to predicted reduction.
+\emph{Accept} steps that reduce $V_2$ and keep $\|\varepsilon\|$ inside the
+estimated validity window; otherwise shrink $\Delta$ or revert to linear seed.
+
+\subsection{Model selection: when to switch beyond linear}
+Define the following falsifiable criteria:
+\begin{enumerate}
+\item \textbf{Curvature test:} compute $c:=\|\mathcal B[\varepsilon^{(0)},\varepsilon^{(0)}]\|/\|\delta\|$.
+If $c\le c_{\min}$, stay linear; if $c\ge c_{\max}$, switch to quadratic.
+\item \textbf{Residual split:} compare $V_{\text{lin}}=\tfrac12\|A\varepsilon^{(0)}-\delta\|_W^2$
+and the one-shot corrected $V_{\text{1s}}=\tfrac12\|A\varepsilon^{(1)}+\tfrac12\mathcal B[\varepsilon^{(1)},\varepsilon^{(1)}]-\delta\|_W^2$.
+\emph{Switch} if $V_{\text{1s}}$ drops by more than a preset fraction.
+\item \textbf{Stability guard:} enforce $\|\varepsilon\|\le r_\star$ when using the
+linear model; if violated, escalate to the quadratic solver.
+\end{enumerate}
+
+\subsection{Propagation to the field and phase layers}
+Second-order corrections alter only the local residual map; the telegraph field
+(Ch.~6--7) and phase layer (Ch.~8) remain unchanged. Consistency is maintained by
+using the same admissibility and Energy--Coherence constraints (Ch.~9--10) and
+feeding the improved $\varepsilon$ estimates into any residual-aware source terms
+without introducing nonlocal dependencies.
+
+\subsection{Computation of the curvature tensor}
+For mother ratios that are rational monomials in the near-unity variables
+(e.g., $\Pi_1=\kappa/\omega^2$, $\Pi_2=b/\omega$, $\Pi_3=\omega\rho$), the
+entries $H^{(i)}_{ab}$ follow from differentiating $\log\Pi_i$ at unity.
+All constants are dimensionless (Option~A). Store $\mathcal B$ as a set of four
+symmetric $4\times4$ matrices $\{H^{(i)}\}$ if $m=4$, or as a rank-3 tensor for
+general $m$; evaluate $\mathcal B[\varepsilon,\varepsilon]$ by symmetric products.
+
+\subsection{Numerical checklist (local-only)}
+\begin{enumerate}
+\item Start with $\varepsilon^{(0)}=A^{-1}\delta$ (Ch.~4); compute $c$ and $r_\star$.
+\item If the curvature test triggers, run Gauss--Newton/LM on $V_2$ with
+line search or trust region (Ch.~14).
+\item Use IRLS if robust losses are required (Ch.~15).
+\item Report: $V_{\text{lin}}$, $V_2$, $\|\varepsilon\|$, $c$, and acceptance ratios.
+\end{enumerate}
+
+\paragraph{Takeaway.}
+Second-order corrections furnish a controlled extension of the seed algebra:
+they quantify curvature via a symmetric bilinear form, define explicit validity
+windows, and provide practical algorithms (one-shot correction, Gauss--Newton/LM)
+that remain dimensionless, local-only, and falsifiable.
+% ===================== End Chapter 21 =====================
+
+% ===================== Chapter 22 =====================
+\section{Symmetry Breaking, Constraints, and Gauge Choices}
+
+\subsection{Symmetry landscape (local-only)}
+We recall the local scale map (Chs.~2--4)
+\[
+(\kappa,\omega,b,\rho)\ \mapsto\ (\lambda^2\kappa,\ \lambda\omega,\ \lambda b,\ \lambda^{-1}\rho),\qquad \lambda>0,
+\]
+under which the invariants $(\Pi_1,\Pi_2,\Pi_3)$ and the seed log-linearization
+are preserved. At the field level, the telegraph core (Chs.~6--7) is invariant
+under additive time shifts and, in the presence of a phase variable,
+under local phase reparameterizations $\varphi\mapsto\varphi+\phi_0$ when
+sources depend only on phase differences. These symmetries are \emph{local-only}
+(no nonlocal kernels or global memory).
+
+\subsection{Constraints vs.\ gauges: definitions}
+\begin{itemize}
+\item \textbf{Constraints} restrict feasible states (physical or calibration): 
+box bounds on $\varepsilon$, equality relations among components, positivity of
+weights $W$, etc. They alter the feasible set and can change the optimizer.
+\item \textbf{Gauges} remove redundancies without changing physical predictions:
+reference phase $\theta(\Psi)$, baseline offsets that cancel in observables,
+or the choice of anchor units (rad/s vs.\ Hz). Fixing a gauge selects a
+representative from an equivalence class.
+\end{itemize}
+
+\subsection{Residual layer with constraints (projection and multipliers)}
+Given $r(\varepsilon)=G\varepsilon-\delta$ and weight $W\succeq0$ (Chs.~13--15),
+constrained estimation solves
+\begin{equation}
+\min_{\varepsilon}\ \tfrac12\,\|r(\varepsilon)\|_W^2
+\quad\text{s.t.}\quad
+A_{\mathrm{eq}}\varepsilon=b_{\mathrm{eq}},\qquad \ell\le \varepsilon\le u.
+\label{eq:residual_constrained}
+\end{equation}
+Two portable strategies:
+\paragraph{(i) Projected metric.}
+Let $\Pi_{\mathcal C}$ be the projection onto the box $[\ell,u]$; use
+\[
+\varepsilon^{k+1}=\Pi_{\mathcal C}\big(\varepsilon^k-\eta_k\,\Lambda_k\,G^\top W(G\varepsilon^k-\delta)\big)
+\]
+with $\Lambda_k\succeq0$ (Ch.~14). Equality constraints are enforced by projecting
+the direction onto the nullspace of $A_{\mathrm{eq}}$.
+
+\paragraph{(ii) Lagrange multipliers (KKT).}
+Solve the saddle system for the linearized step $p$:
+\[
+\begin{bmatrix}
+G^\top W G & A_{\mathrm{eq}}^\top\\
+A_{\mathrm{eq}} & 0
+\end{bmatrix}
+\begin{bmatrix}
+p\\ \lambda
+\end{bmatrix}
+=
+-\begin{bmatrix}
+G^\top W (G\varepsilon-\delta)\\
+A_{\mathrm{eq}}\varepsilon-b_{\mathrm{eq}}
+\end{bmatrix},
+\]
+then update $\varepsilon\leftarrow \Pi_{[\ell,u]}(\varepsilon+p)$. Both methods
+are dimensionless and local-only.
+
+\subsection{Gauge fixing in the phase/field layer}
+The phase coupling (Ch.~8) uses a reference $\theta(\Psi)$ that enters only via
+differences $\varphi-\theta(\Psi)$. To avoid drift in a neutrally stable phase
+direction, choose a \emph{local gauge}:
+\[
+\theta(\Psi)=\arg(\Psi),\quad\text{or}\quad 
+\theta(\Psi)=\mathcal G(\Psi)\ \text{with}\ \mathcal G\ \text{local, Lipschitz}.
+\]
+Gauge changes $\theta\mapsto \theta+\phi_0$ induce $\varphi\mapsto \varphi+\phi_0$
+with no change to physical observables or the Energy--Coherence budget.
+For the telegraph PDE, additive offsets in $\Psi$ are fixed by boundary/mean
+conditions (periodic mean-zero or Dirichlet anchoring).
+
+\subsection{Symmetry breaking: when and why}
+Breaking a symmetry is legitimate when it:
+(i) removes degeneracy that harms identifiability or numerical stability,
+(ii) is realized by a gauge choice that leaves observables invariant, or
+(iii) encodes a physical constraint (e.g., positivity or pinned boundary data).
+Examples:
+\begin{itemize}
+\item \textbf{Phase pinning:} fix $\theta(\Psi)$ at a point or region to kill
+global phase drift; $\rho_{\mathrm{lock}},\chi_{\mathrm{lock}}$ remain well-defined.
+\item \textbf{Unit anchor:} adopt rad/s (Option A) globally; Hz appears only in
+figures via $f_0=\Omega_0/(2\pi)$.
+\item \textbf{Mean removal:} enforce $\int_\Omega \Psi\,dx=0$ (periodic), which
+is a harmless gauge for dynamics that depend on gradients and time derivatives.
+\end{itemize}
+
+\subsection{Compatibility with Energy--Coherence and stability}
+Any constraint or gauge must preserve the telegraph window and the energy law.
+For the constrained residual problem, ensure the projected/augmented steps
+remain descent directions in the metric induced by $W$:
+\[
+V(\varepsilon^{k+1})\le V(\varepsilon^k)\quad\text{with}\quad
+V=\tfrac12\|G\varepsilon-\delta\|_W^2.
+\]
+For the field, gauge operations are algebraic and local; they do not alter
+the dissipative terms (Ch.~10) nor the dispersion (Ch.~6).
+
+\subsection{Local gauge for measurement maps (non-circular)}
+If a measurement map admits an arbitrary baseline (e.g., a log-gain or offset),
+fix it \emph{after} defining $\delta=\mathcal M(\mathcal O[\Psi])+\eta$ (Ch.~10),
+never before. This prevents circular definitions linking $\delta$ to $\varepsilon$.
+All calibrations (e.g., $W_0$) are reported explicitly and locally.
+
+\subsection{Inequality constraints on phase and field}
+Typical local constraints:
+\[
+|\varphi|\le \pi,\qquad \Psi_{\min}\le \Psi \le \Psi_{\max},\qquad
+0\le J(\Psi)\le J_{\max}.
+\]
+Enforce them by projection in time-stepping (Ch.~12) or by proximal penalties:
+\[
+\min_{\Psi}\ \mathcal J(\Psi)
+:= E_{\text{coh}}(\Psi) + \iota_{[\Psi_{\min},\Psi_{\max}]}(\Psi),
+\]
+where $\iota$ is the indicator of the feasible interval; implicit steps with
+projection preserve the discrete energy decrease.
+
+\subsection{Falsifiable checks (governance-compliant)}
+\begin{enumerate}
+\item \textbf{Gauge invariance:} run two simulations differing only by a constant
+phase shift in $\theta$; show identical $(E_{\text{coh}},\rho_{\mathrm{lock}},\chi_{\mathrm{lock}})$
+trajectories (up to the trivial shift).
+\item \textbf{Constraint descent:} under box/equality constraints, verify monotone
+decrease of $V$ for accepted steps; ablate projections to demonstrate failure.
+\item \textbf{Mean removal neutrality:} with/without mean-zero gauge for periodic
+BC, confirm identical dispersion and energy decay (differences appear only as a
+constant offset).
+\end{enumerate}
+
+\subsection{Implementation notes (dimensionless)}
+\begin{itemize}
+\item Use rad/s anchors (Option A) throughout; do not mix Hz into algebra.
+\item Prefer QR-based KKT solves for constrained WLS (avoid squaring the
+condition number).
+\item In time-stepping, apply projection after each implicit or IMEX step and
+recompute the discrete energy to enforce the Energy--Coherence check.
+\end{itemize}
+
+\paragraph{Takeaway.}
+Constraints change feasible sets; gauges remove redundancy. Both can be handled
+locally—with projections, KKT systems, and phase pinning—without violating
+telegraph stability, Energy--Coherence monotonicity, or non-circularity of the
+measurement loop. The result is a symmetry-aware, dimensionless, K-free practice
+for robust inference and evolution across the stack.
+% ===================== End Chapter 22 =====================
+
+% ===================== Chapter 23 =====================
+\section{Stochastic Forcing \& Uncertainty Quantification in Residual/Field Layers}
+
+\subsection{SPDE model (local-only, Option A)}
+Let $\Psi(\mathbf x,t)$ satisfy the telegraph-stable core with admissible sources (Ch.~9--11) and additive local noise:
+\begin{equation}
+\tau\,\partial_t^2\Psi + \partial_t\Psi - c^2\nabla^2\Psi
+= \mathsf S(\Psi,\varphi;\varepsilon,\delta) \;+\; \xi(\mathbf x,t),
+\qquad \mathbb E[\xi]=0,
+\label{eq:spde_core}
+\end{equation}
+where $\xi$ is white-in-time, $L^2(\Omega)$-valued, with spatial covariance operator $Q$:
+\[
+\mathbb E\big[\langle\xi(t),\phi\rangle \langle\xi(t'),\psi\rangle\big]
+= 2\,\langle Q\phi,\psi\rangle\,\delta(t-t').
+\]
+All coefficients and statistics are \emph{local-only}, dimensionless, and respect Option~A (rad/s).
+
+\subsection{Mild/semigroup formulation and energy in expectation}
+Setting $Z=(\Psi,\partial_t\Psi)$ and $\mathcal A$ as in Ch.~11, the mild solution is
+\[
+Z(t)=e^{t\mathcal A}Z(0)+\int_0^t e^{(t-s)\mathcal A}\,\mathcal N(Z(s))\,ds
++\int_0^t e^{(t-s)\mathcal A}\,(0,\tau^{-1}\,dW_Q(s)),
+\]
+with $W_Q$ a $Q$-Wiener process and $\mathcal N(Z)=(0,\tau^{-1}\mathsf S)$.
+Define the coherence energy $E_{\text{coh}}(t)$ as in Ch.~10. Under the admissibility rules (Ch.~9),
+\begin{equation}
+\mathbb E\,E_{\text{coh}}(t)
+\;+\;\mathbb E\!\int_0^t \!\!\int_\Omega \big(\tau\,|\partial_t^2\Psi|^2+|\partial_t\Psi|^2\big)\,dx\,ds
+\;\le\; C\Big(\mathbb E\,E_{\text{coh}}(0)+ t\,\mathrm{Tr}_{H} Q\Big),
+\label{eq:exp_energy}
+\end{equation}
+so energy remains bounded in expectation with growth controlled by $\mathrm{Tr}\,Q$.
+
+\subsection{Local stochastic models (additive, multiplicative, colored)}
+While \eqref{eq:spde_core} uses additive noise, two local variants are common:
+\begin{align}
+\text{Multiplicative: }&
+\tau\,\partial_t^2\Psi+\partial_t\Psi-c^2\nabla^2\Psi
+= \mathsf S(\Psi,\varphi;\varepsilon,\delta)
++ \sigma(\Psi)\,\xi(\mathbf x,t),\label{eq:mult_noise}\\
+\text{Colored-in-time: }&
+\xi=\dot\eta,\quad \dot\eta=-\gamma_\eta\,\eta + \sqrt{2\gamma_\eta}\,\zeta,
+\label{eq:colored}
+\end{align}
+where $\sigma(\Psi)$ is bounded/Lipschitz, $\gamma_\eta>0$, and $\zeta$ is white-in-time, local. Both preserve locality and, under small-gain bounds, the telegraph window $\Re s<0$.
+
+\subsection{Residual-layer uncertainty: propagation and intervals}
+Let $r=G\varepsilon-\delta$ with $W=\Sigma^{-1}\succeq0$ (Ch.~13--15).
+\paragraph{Gaussian model (local covariance).}
+If $\delta\sim \mathcal N(\bar\delta,\Sigma)$ and $\mathrm{rank}(G)=4$, the WLS estimator
+\[
+\hat\varepsilon=(G^\top W G)^{-1}G^\top W \delta
+\]
+has local covariance
+\begin{equation}
+\mathrm{Cov}(\hat\varepsilon)=(G^\top W G)^{-1}.
+\label{eq:cov_eps}
+\end{equation}
+Hence $(\hat\varepsilon-\varepsilon)^\top (G^\top W G)(\hat\varepsilon-\varepsilon)$ is asymptotically $\chi^2_4$, producing local ellipsoidal intervals.
+
+\paragraph{Tikhonov/LM adjustment.}
+For $\varepsilon_\lambda=(G^\top W G+\lambda I)^{-1}G^\top W \delta$, use the sandwich form
+\[
+\widehat{\mathrm{Cov}}(\varepsilon_\lambda)\approx
+(G^\top W G+\lambda I)^{-1}(G^\top W G)(G^\top W G+\lambda I)^{-1},
+\]
+or SVD-based filter-factor propagation (Ch.~13).
+
+\paragraph{Robust (IRLS) surrogates.}
+With IRLS weights $\hat W=\mathrm{diag}(w_i/\sigma_i^2)$, adopt the Godambe/sandwich estimator
+\[
+\widehat{\mathrm{Cov}}(\hat\varepsilon)\approx
+(G^\top \hat W G)^{-1}\Big(G^\top \hat W\,\widehat S\,\hat W G\Big)(G^\top \hat W G)^{-1},
+\quad \widehat S=\sum_i r_i^2 e_i e_i^\top .
+\]
+
+\subsection{Linearized covariance for the field (local, short-time)}
+Around a reference trajectory $\bar\Psi$, linearize the source $\mathsf S$ and write the first-variation system
+\[
+\tau\,\partial_t^2 \tilde\Psi + \partial_t\tilde\Psi - c^2\nabla^2\tilde\Psi
+= \mathcal L(t)\,\tilde\Psi + \xi,
+\]
+with bounded local operator $\mathcal L(t)$. Let $\mathcal C(t)=\mathbb E[\tilde Z\otimes\tilde Z]$ be the covariance of $\tilde Z=(\tilde\Psi,\partial_t\tilde\Psi)$. Then formally
+\[
+\dot{\mathcal C}=\mathcal A \mathcal C + \mathcal C \mathcal A^\ast + \mathcal B \mathcal Q \mathcal B^\ast
+\]
+(Lyapunov-type equation) on a truncated modal basis (e.g., eigenmodes or grid modes), where $\mathcal B$ injects the noise into the velocity component. This gives local, short-time covariance surrogates for $\Psi$.
+
+\subsection{Ensemble UQ (local-only)}
+Define an ensemble $\{\Psi^{(s)}\}_{s=1}^S$ by sampling local noise realizations consistent with $Q$ and (if needed) local priors for sources. Report ensemble statistics:
+\[
+\bar\Psi=\tfrac{1}{S}\sum_s \Psi^{(s)},\qquad
+\mathrm{Var}[\Psi]=\tfrac{1}{S-1}\sum_s \big(\Psi^{(s)}-\bar\Psi\big)^2,
+\]
+and propagate to coherence energy and locking indices:
+\[
+\mathbb E[E_{\text{coh}}],\ \mathrm{Var}[E_{\text{coh}}],\quad
+\mathbb E[\rho_{\mathrm{lock}}],\ \mathbb E[\chi_{\mathrm{lock}}].
+\]
+All sampling is local and dimensionless; seeds and windows are recorded for reproducibility.
+
+\subsection{Local Bayesian view (hat-frame, non-circular)}
+At a fixed space--time location (or short window), combine a local prior $p(\varepsilon)$ with the likelihood induced by $\delta\mid \varepsilon \sim \mathcal N(G\varepsilon,\Sigma)$ to obtain
+\[
+p(\varepsilon\mid \delta)\ \propto\ \exp\!\Big(-\tfrac12\|G\varepsilon-\delta\|_{W}^2\Big)\,p(\varepsilon).
+\]
+For Gaussian priors $\mathcal N(\mu_0,\Gamma_0)$, the posterior is Gaussian with
+\[
+\Gamma^{-1} = G^\top W G + \Gamma_0^{-1},\qquad
+\mu= \Gamma\,(G^\top W \delta + \Gamma_0^{-1}\mu_0).
+\]
+All are computed locally; no global $K$ is introduced.
+
+\subsection{Uncertainty on diagnostics and locking}
+Report confidence intervals for
+\[
+E_{\text{coh}},\quad V=\tfrac12 r^\top W r,\quad
+\rho_{\mathrm{lock}},\ \chi_{\mathrm{lock}},
+\]
+via ensemble quantiles or linearized variance propagation. In the locking regime, verify
+\begin{equation}
+\frac{d}{dt}\,\mathbb E[V]\ \le\ 0,
+\qquad
+\mathrm{Var}[V]\ \text{bounded on } [0,T],
+\label{eq:locking_uq}
+\end{equation}
+modulo admissible parametric work (Ch.~10).
+
+\subsection{Calibration to $\Omega_0$ and $W_0$ (Option A)}
+Frequencies are reported in rad/s with anchor $\Omega_0$; use $f_0=\Omega_0/(2\pi)$ only for figures. Decompose
+\[
+W=W_0\,\widetilde W,\qquad \Lambda=\lambda_0\,\widetilde\Lambda,
+\]
+and choose $(W_0,\lambda_0)$ so that (i) whitened residuals satisfy $\mathbb E[\|W^{1/2}r\|_2^2]\approx m$ per window, and (ii) desired mean decay of $V$ is achieved.
+
+\subsection{Falsifiable UQ tests (governance-compliant)}
+\begin{enumerate}
+\item \textbf{Energy in expectation:} with fixed $Q$, verify \eqref{eq:exp_energy} by measuring $\mathbb E[E_{\text{coh}}(t)]$ over ensembles; \emph{fail} if growth exceeds the predicted $C\,t\,\mathrm{Tr}\,Q$ scaling.
+\item \textbf{Coverage of $\hat\varepsilon$:} for Gaussian data, check empirical coverage of ellipsoids from \eqref{eq:cov_eps}; \emph{fail} if under/over-coverage persists beyond tolerance.
+\item \textbf{IRLS robustness:} contaminate a fraction of $\delta$; IRLS-based sandwich covariance should stabilize intervals (bounded influence); \emph{fail} if intervals collapse or inflate uncontrollably.
+\item \textbf{Ensemble consistency:} increase $S$; monitor convergence of ensemble moments (LLN). \emph{Fail} if moments drift with $S$ beyond sampling error.
+\end{enumerate}
+
+\subsection{Reproducibility kit (local-only)}
+For each UQ run, publish: noise seeds, window definitions, $Q$ (or its discretization), $(W_0,\lambda_0)$, solver options (CN/IMEX/Newmark), and time series of
+\[
+\{E_{\text{coh}},\,V,\,\rho_{\mathrm{lock}},\,\chi_{\mathrm{lock}}\}
+\]
+with ensemble means and quantiles.
+
+\paragraph{Takeaway.}
+Local stochastic models compatible with the telegraph core and the residual algebra provide quantitative, falsifiable uncertainty bounds. Expectation energy control, ensemble or linearized covariance, and robust residual statistics yield a portable UQ practice that remains dimensionless, K-free, and non-circular from data to fields.
+% ===================== End Chapter 23 =====================
+
+% ===================== Chapter 24 =====================
+\section{Control \& Design in Residual Space: Targeting $\delta$ and Shaping Dynamics}
+
+\subsection{Objectives and separation of roles (non-circular)}
+We distinguish two local control channels at space--time point $(\mathbf x,t)$:
+\begin{enumerate}
+\item \textbf{Residual-space actuation} $u_r$: adjusts local data handling or actuator knobs that influence the \emph{measured} deviation $\delta$ (e.g., local gain/offset in $\mathcal M$, selection of features $\mathcal O[\Psi]$, or sensor-side dithers), without referencing $\varepsilon$ in the definition of $\delta$.
+\item \textbf{Field-space actuation} $u_f$: modulates admissible source gains in the telegraph PDE (e.g., $\alpha_1,\alpha_3,\beta_{\mathrm{pm}},\alpha_{\mathrm{cpl}},D,\eta$), keeping small-gain/saturation bounds so that $\Re s<0$ and $\dot E_{\text{coh}}\le0$ (modulo source work).
+\end{enumerate}
+This separation upholds \emph{non-circularity}: $\delta=\mathcal M(\mathcal O[\Psi])+\eta$ depends on $\Psi$ only; $\varepsilon$ is inferred from $\delta$ by algebra (Chs.~4, 13).
+
+\subsection{Residual-space control: target tracking for $r:=G\varepsilon-\delta$}
+Let $r(\varepsilon)=G\varepsilon-\delta$, $V(\varepsilon)=\tfrac12 r^\top W r$, and fix a local reference $r_{\mathrm{ref}}$ (often $0$). We use a \emph{weighted} error
+\[
+e_V := r-r_{\mathrm{ref}},\qquad V_e:=\tfrac12\,e_V^\top W e_V.
+\]
+A continuous-time descent controller (cf.\ Ch.~5 \& 14) is
+\begin{equation}
+\dot\varepsilon = -\Lambda\,G^\top W\,e_V, \qquad \Lambda\succeq 0,
+\label{eq:residual_feedback}
+\end{equation}
+yielding $\dot V_e = -e_V^\top W G \Lambda G^\top W e_V \le 0$.
+Constraints (box/equality) on $\varepsilon$ are enforced by projection as in
+Ch.~22. A discrete implementation uses projected/line-searched steps.
+
+\paragraph{Actuation via $u_r$.}
+If local actuation $u_r$ modifies the measurement map (e.g., a local gain or bias that is part of instrumentation), parameterize
+\[
+\delta=\mathcal M(\mathcal O[\Psi];u_r)+\eta
+\]
+with $u_r$ \emph{not} depending on $\varepsilon$. A simple descent on $u_r$ is
+\begin{equation}
+\dot u_r=-\Gamma_r\,\partial_{u_r}\big(\tfrac12\|G\varepsilon-\mathcal M(\mathcal O[\Psi];u_r)\|_W^2\big),
+\qquad \Gamma_r>0,
+\label{eq:ur_descent}
+\end{equation}
+which reduces $V$ while keeping the definition of $\delta$ non-circular.
+
+\subsection{Field-space shaping: admissible telegraph modulation}
+The telegraph core with sources reads (Ch.~6, 9)
+\begin{equation}
+\tau\,\partial_t^2\Psi+\partial_t\Psi-c^2\nabla^2\Psi
+= \mathsf S(\Psi,\varphi;\varepsilon,\delta;u_f),
+\label{eq:telegraph_controlled}
+\end{equation}
+where $u_f$ collects local gains subject to admissibility (Lipschitz, passivity).
+A Lyapunov-compatible policy is a small-gain schedule
+\begin{equation}
+u_f(t)=\mathcal U\big(\Psi,\partial_t\Psi,\nabla\Psi;\ \rho_{\mathrm{lock}},\chi_{\mathrm{lock}}\big)
+\quad\text{s.t.}\quad
+\dot E_{\text{coh}}\le 0\ \text{and}\ \Re s<0.
+\label{eq:uf_policy}
+\end{equation}
+Examples: (i) increase $\alpha_3$ when $|\Psi|$ grows (saturation); (ii) reduce
+$\beta_{\mathrm{pm}}$ under large $|\partial_t\Psi|$ (anti-runaway); (iii) tune
+$\alpha_{\mathrm{cpl}}$ to achieve phase locking (Ch.~8) without violating \eqref{eq:uf_policy}.
+
+\subsection{Local MPC (finite-horizon) in the hat frame}
+Define a local horizon $H>0$ and cost
+\begin{equation}
+\mathcal J = \int_{t}^{t+H}\!\!\Big(
+\underbrace{\tfrac12\|r(\tau)-r_{\mathrm{ref}}\|_W^2}_{\text{residual}}
++\underbrace{\mu_E\,\mathscr D_E(\tau)}_{\text{field dissipation}}
++\underbrace{\mu_u\,\|u_f(\tau)\|^2}_{\text{effort}}
+\Big)\,d\tau,
+\qquad \mathscr D_E:= -\dot E_{\text{coh}}\ \ (\ge0),
+\label{eq:mpc_cost}
+\end{equation}
+with weights $\mu_E,\mu_u\ge 0$. The MPC problem is
+\[
+\min_{u_f(\cdot),\,u_r(\cdot)} \mathcal J
+\ \text{ subject to }\ 
+\eqref{eq:telegraph_controlled},\ \text{admissibility (Ch.~9--11)},\
+\text{constraints/gauges (Ch.~22)}.
+\]
+A \emph{local} solver uses the semi-discrete model (Ch.~12) and projected
+gradient or SQP on the short horizon, then applies the first control slice.
+
+\subsection{Passivity-based design: small-gain synthesis}
+For the linearized telegraph operator with dissipative sources, the map
+$(\mathsf S\mapsto \partial_t\Psi)$ is passive with respect to
+$\langle \mathsf S, \partial_t\Psi\rangle$. Choose $u_f$ so that the active parts
+are bounded by the intrinsic damping:
+\begin{equation}
+\|\mathsf S_{\text{active}}\|_{L^\infty}
+\ \le\ \gamma_\star \|\Psi\|,
+\qquad \gamma_\star < \gamma_{\min}(\tau,c),
+\label{eq:small_gain_synthesis}
+\end{equation}
+ensuring $\dot E_{\text{coh}}\le 0$. This provides a constructive, falsifiable
+recipe for $u_f$.
+
+\subsection{Design under constraints and gauges}
+Constraints (box/equality) on $\varepsilon$ and bounds on $u_f,u_r$ are enforced
+by projection (Ch.~22). Gauges (e.g., reference phase $\theta(\Psi)$) do not
+affect cost or stability since only differences appear. The Option~A rad/s
+convention is maintained; Hz appears only in figures via $f_0=\Omega_0/(2\pi)$.
+
+\subsection{Calibration of $(W_0,\lambda_0)$ for control}
+Decompose $W=W_0\widetilde W$ and $\Lambda=\lambda_0\widetilde\Lambda$ (Ch.~10, 15).
+Tuning rules:
+\[
+W_0:\ \mathbb E[\|W^{1/2}r\|_2^2]\approx m\ \ \Rightarrow\ \ \text{well-scaled residual penalty};
+\qquad
+\lambda_0:\ \text{sets the closed-loop decay rate of }V.
+\]
+Both are scalar and local; they do not change dimensionless algorithms.
+
+\subsection{Algorithms (local templates)}
+\paragraph{Projected residual--field coordination (one step).}
+\begin{enumerate}
+\item \textbf{Residual step:} update $\varepsilon\leftarrow \Pi_{\mathcal C}(\varepsilon-\eta\,\Lambda G^\top W e_V)$.
+\item \textbf{Field step:} update $u_f$ by a projected descent on $\mathcal J$
+or by rule \eqref{eq:small_gain_synthesis}; integrate \eqref{eq:telegraph_controlled}
+one time step with CN/IMEX (Ch.~12).
+\item \textbf{Actuator step:} update $u_r$ via \eqref{eq:ur_descent} (project to bounds).
+\end{enumerate}
+
+\paragraph{Local MPC (receding horizon).}
+\begin{enumerate}
+\item Linearize/discretize on $[t,t+H]$; form gradients of \eqref{eq:mpc_cost}.
+\item Solve a projected SQP or gradient step; apply first control increment.
+\item Advance the horizon and repeat.
+\end{enumerate}
+
+\subsection{Falsifiable tests (governance-compliant)}
+\begin{enumerate}
+\item \textbf{Lyapunov decrease:} in closed loop, verify
+$\Delta V\le 0$ (residual) and $\dot E_{\text{coh}}\le 0$ (field) modulo admissible source work.
+\item \textbf{Ablation:} remove saturation or violate small-gain;
+expect energy growth or loss of $\Re s<0$; restore to pass.
+\item \textbf{Constraint compliance:} log violations of bounds on $(\varepsilon,u_f,u_r)$;
+\emph{pass} if none occur under the projected updates.
+\item \textbf{Reference tracking:} set $r_{\mathrm{ref}}=0$; report convergence rate
+vs.\ $(W_0,\lambda_0)$ tuning; \emph{fail} if rates contradict predictions.
+\end{enumerate}
+
+\subsection{Representative outcomes (qualitative)}
+\begin{itemize}
+\item \textbf{Targeted residuals:} $r\to r_{\mathrm{ref}}$ with monotone $V$.
+\item \textbf{Stable field shaping:} admissible $u_f$ preserves $\Re s<0$ and enforces
+bounded, coherent envelopes; discrete energy is nonincreasing.
+\item \textbf{Locking-aware control:} when $\rho_{\mathrm{lock}},\chi_{\mathrm{lock}}$ are high,
+residual energy decreases faster and smaller control effort is required.
+\end{itemize}
+
+\paragraph{Takeaway.}
+By coordinating a residual-space descent with an admissible, passivity-aware
+field actuation, one obtains a dimensionless, local-only control layer that
+\emph{targets} the measured deviation $\delta$ and \emph{shapes} coherent
+dynamics without violating telegraph stability, the Energy--Coherence Law,
+or non-circularity of the measurement loop.
+% ===================== End Chapter 24 =====================
