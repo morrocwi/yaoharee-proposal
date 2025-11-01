@@ -1,3 +1,5 @@
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17501303.svg)](https://doi.org/10.5281/zenodo.17501303)
+
 # Universe of Information Framework (K-free, Yaoharee Proposal)
 
 This repository contains the official manuscripts, artifacts, and simulation scripts for the "Universe of Information (K-free)" framework.
