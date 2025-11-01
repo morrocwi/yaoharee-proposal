@@ -1,0 +1,17 @@
+* text=auto eol=lf
+
+# Normalize line endings for code and text
+*.py text eol=lf
+*.tex text eol=lf
+*.md  text eol=lf
+*.yml text eol=lf
+*.json text eol=lf
+*.csv text eol=lf
+*.sh  text eol=lf
+
+# Keep binary files untouched
+*.png binary
+*.jpg binary
+*.pdf binary
+*.zip binary
+*.exe binary

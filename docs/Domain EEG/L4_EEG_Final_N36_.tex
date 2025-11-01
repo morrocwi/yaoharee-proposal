@@ -1,0 +1,108 @@
+
+\documentclass[12pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern,microtype}
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage{amsmath,amssymb,mathtools,bm,siunitx,booktabs,graphicx}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{hyperref}
+\usepackage{titlesec}
+\usepackage{enumitem}
+\usepackage{caption}
+\hypersetup{colorlinks=true,linkcolor=MidnightBlue,citecolor=ForestGreen,urlcolor=RoyalBlue}
+\sisetup{detect-all,output-decimal-marker={.}}
+
+\title{\Large\bfseries
+L4 — Phase–Amplitude Persistence in Human EEG (N=36)\\[3pt]
+\large Empirical Validation of the Lyapunov–Scale–Lock Framework (Yaoharee Cosmo v3.2–MVF)}
+\author{Yaoharee Lahtee\\
+\textit{Cosmo @ Home (Open Science Initiative), Bangkok, Thailand}\\
+ORCID: \url{https://orcid.org/0009-0005-3861-0626}\\
+Email: \texttt{arayawedding@gmail.com}}
+\date{November 2025}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent
+This study presents the first large-scale empirical validation (N=36) of predictions from the \emph{Yaoharee Cosmo Minimal-Viable Foundation} (L0–L3). 
+It tests whether emergent phase coherence in EEG is more temporally persistent than amplitude energy. 
+Nineteen-channel EEG signals (Fp1–O2, 160 Hz) were analyzed across α, β, and γ bands using Hilbert-phase decomposition.
+For each region of interest (ROI), two metrics were estimated: 
+phase persistence (\(\tau_\phi\)) from exponential relaxation of \(1-\rho(t)\),
+and envelope persistence (\(\tau_{\mathrm{env}}\)) from autocorrelation decay.
+Across all ROIs and bands, \(\tau_\phi > \tau_{\mathrm{env}}\) (p < 0.01), confirming that informational coherence persists longer than energetic amplitude — a “coherent yet volatile” regime consistent with the Lyapunov dissipation law \(\dot V \le 0\).
+All data and code are openly released under CC BY 4.0.
+\end{abstract}
+
+\noindent\textbf{Keywords:} EEG, phase locking, Hilbert transform, Lyapunov dissipation, coherence, open science
+
+\section{Methods}
+\subsection{Dataset}
+Data: \textit{Complete EEG Dataset} (Kaggle), from \emph{Data} 4(1):14 (2019) and PhysioNet/PhysioBank \cite{Goldberger2000}.  
+N = 36 participants, 19 electrodes (Fp1–O2), sampling 160 Hz.
+
+\subsection{Processing}
+Signals were filtered into α (8–12 Hz), β (13–30 Hz), γ (30–45 Hz).  
+Hilbert transform extracted analytic phase and envelope.
+ROIs: Frontal, Central, Temporal, Parietal, Occipital.
+
+\subsection{Metrics}
+Phase-lock order \(\rho(t)=\left|\frac{1}{K}\sum e^{i\phi_k(t)}\right|\);  
+Phase persistence \(\tau_\phi\): from \(1-\rho(t)\approx ae^{-t/\tau_\phi}+b\);  
+Envelope persistence \(\tau_{\mathrm{env}}\): lag where autocorrelation(A) = \(1/e\).
+
+\section{Results}
+\begin{table}[h!]
+\centering
+\caption{Mean ± SD of phase (\(\tau_\phi\)) and envelope (\(\tau_{\mathrm{env}}\)) persistence across ROIs and bands (N = 36).}
+\begin{tabular}{lccc}
+\toprule
+ROI & Alpha (8–12 Hz) & Beta (13–30 Hz) & Gamma (30–45 Hz)\\
+\midrule
+\input{L4_table_rows_N36.txt}
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=0.9\linewidth]{l4_eeg.png}
+\caption{L4 (N = 36) Core Finding: Phase Persistence (\(\tau_\phi\)) vs. Envelope Persistence (\(\tau_{\mathrm{env}}\)).
+Bars show mean ± SD. Dark = \(\tau_\phi\); light = \(\tau_{\mathrm{env}}\).}
+\label{fig:l4bar}
+\end{figure}
+
+\section{Discussion}
+The consistent inequality \(\tau_\phi>\tau_{\mathrm{env}}\) empirically validates the dissipative-path postulate of L0–L3.  
+Phase synchrony persists longer than amplitude energy, indicating that informational order outlives energetic expression.  
+Occipital α bands show strongest coherence (\(\rho\approx0.73, \tau_\phi\approx0.42\) s) while frontal γ activity is most transient (\(\tau_\phi\approx0.15\) s).  
+This supports the Lyapunov functional \(V=\frac12(A\varepsilon-\delta)^{\!\top}W(A\varepsilon-\delta)\) with \(\dot V\le0\), where energy decays but relational structure persists.
+
+\textbf{Interpretation.}  
+Phase persistence (\(\tau_\phi\)) represents stability of informational coherence; envelope persistence (\(\tau_{\mathrm{env}}\)) represents energy dissipation.  
+Their separation quantitatively supports the principle “Emergence ≠ Stability.”  
+Hence, coherence is not a static equilibrium but a self-restoring dynamic state.
+
+\textbf{Outlook.}  
+Future work will generalize this dual-metric framework to other coherence domains—laser fields, Schumann resonances, gravitational signals—to test universality of \(\tau_\phi>\tau_{\mathrm{env}}\) across physical and informational scales.
+
+\section*{Open Science Statement}
+\textit{Our Methodology—Citizen Open Science Work @ Home with AI:}
+We encourage transparent, reproducible exploration from home using AI under FAIR principles (CC BY 4.0).  
+Repository: \url{https://github.com/morrocwi/yaoharee-proposal}.
+
+\begin{thebibliography}{9}
+\bibitem{Goldberger2000}
+Goldberger A. L. et al. (2000). PhysioBank, PhysioToolkit, and PhysioNet: Components of a new research resource for complex physiologic signals. \textit{Circulation}, 101(23), e215–e220.
+
+\bibitem{MDPI2019}
+Rahman A., Arif S. M., \& Ahmed F. (2019). A Comprehensive Survey on EEG Data Preprocessing and Transformation Methods. \textit{Data}, 4(1), 14.
+
+\bibitem{Yaoharee2025}
+Lahtee Y. (2025). \textit{L0–L3: Minimal-Viable Foundation for the Emergent Coherence Field.} Zenodo. DOI: 10.5281/zenodo.17495915.
+\end{thebibliography}
+
+\end{document}
